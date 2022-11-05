@@ -1,0 +1,18 @@
+<ion-content [fullscreen]="true">
+
+  <div class="header">
+    <model-viewer src="assets/models/RobotExpressive.glb" autoplay></model-viewer>
+  </div>
+
+  <div class="form">
+    <ion-input placeholder="Número de teléfono" type="number" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" #ctrl="ngModel"></ion-input>
+  </div>
+
+  <div class="button" (click)="SignIn(phone, password)">
+    Iniciar Sesión <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+  <div class="footer">
+    <h3 routerLink="/register-user">¿No tienes una cuenta? <span>Únete</span></h3>
+  </div>
+</ion-content>

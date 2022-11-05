@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-menu-button color="primary" menu="main-menu" slot="start"> </ion-menu-button>
+    <ion-chip slot="end">
+      <ion-avatar>
+        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+      <ion-label>{{CurrentUser[0].name + " " + CurrentUser[0].lastname}}</ion-label>
+    </ion-chip>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment value="all" color="primary" (ionChange)="segmentChange($event)">
+    <ion-segment-button value="all">
+      <ion-label>Todos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="0">
+      <ion-icon color="danger" name="close-circle-outline"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="1">
+      <ion-icon color="warning" name="alert-circle-outline"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="2">
+      <ion-icon color="success" name="checkmark-done-circle-outline"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+  
+  <ion-list *ngFor="let report of Reports; let i = index">
+      <ion-card *ngIf="report.status == segment">
+        <div class="map" id="map" style="height:200px; width: 100%;"></div>
+        <ion-card-header>
+          <ion-card-title>{{report.name}}</ion-card-title>
+          <ion-card-subtitle>{{report.department}}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          {{report.description}}
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card *ngIf="segment == 'all'">
+        <div class="map" id="map{{i}}" style="height:200px; width: 100%;"></div>
+        <ion-card-header>
+          <ion-card-title>{{report.name}}</ion-card-title>
+          <ion-card-subtitle>Tipo: <ion-icon style="color: {{report.department.color}};" name="{{report.department.icon}}"></ion-icon>
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          {{report.description}}
+        </ion-card-content>
+      </ion-card>
+  </ion-list>
+
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="dark">
+      <ion-icon md="add" ios="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="light">
+        <ion-icon name="car"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="openWaterRerpot()" color="light">
+        <ion-icon style="color: #067ee0;" name="water"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="openStreetLightingRerpot()" color="light">
+        <ion-icon style="color: #e0d206;" name="bulb"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>

@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+    <ion-title>galery</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+        <ion-img [src]="this.photo.webviewPath"></ion-img>
+    </ion-row>
+  </ion-grid>
+</ion-content>

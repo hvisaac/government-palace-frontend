@@ -1,0 +1,21 @@
+<ion-content [fullscreen]="true">
+
+  <div class="header">
+    <h1>Crear una <br> nueva cuenta</h1>
+  </div>
+
+  <div class="form">
+    <ion-input placeholder="Nombre(s)" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Apellidos" [(ngModel)]="lastname" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Número de teléfono" type="number" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Repetir Contraseña" type="password" [(ngModel)]="repassword" #ctrl="ngModel"></ion-input>
+  </div>
+
+  <div class="button" (click)="SignUp(phone, password, repassword, name, lastname)">
+    Registrarse <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+  <div class="footer">
+    <h3 routerLink="/login">¿Ya tienes una cuenta? <span>Inicia Sesión</span></h3>
+  </div>
+</ion-content>

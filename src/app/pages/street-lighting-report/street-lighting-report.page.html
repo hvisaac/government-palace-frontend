@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar style="--background: #e0d206;">
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+    <ion-title>Reporte de alumbrado público</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form">
+    <div class="photo">
+      <ion-img (click)="viewPhotos()" *ngIf="PhotoService.photo" [src]="PhotoService.photo.webviewPath"></ion-img>
+      <ion-img *ngIf="!PhotoService.photo" src="assets/app-icons/not-photo.png"></ion-img>
+      <ion-button fill="clear" (click)="shootPhoto()">
+        <ion-label>Tomar foto</ion-label>
+        <ion-icon slot="icon-only" name="camera"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-input placeholder="Nombre corto" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-textarea placeholder="Descripción" [(ngModel)]="description" #ctrl="ngModel"></ion-textarea>
+
+
+    <div class="map" id="map" style="height:200px; width: 100%;"></div>
+
+  </div>
+
+  <div (click)="saveReport()" class="main-button">
+    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+
+</ion-content>
