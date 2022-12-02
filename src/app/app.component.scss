@@ -1,0 +1,28 @@
+ion-content{
+    --background: #B22241;
+}
+
+ion-toolbar{
+    border-radius: 0px 0px 50px 50px;
+    --background: #f6f5f5;
+}
+
+ion-item{
+    --background: #B22241;
+}
+
+ion-item-divider{
+    --background: #B22241;
+}
+
+ion-header{
+    background: #B22241;
+}
+
+ion-list{
+    background: #B22241;
+}
+
+ion-menu::part(container) {
+    border-radius: 0 50px 50px 0;
+}

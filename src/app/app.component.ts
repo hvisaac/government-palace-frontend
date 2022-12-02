@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { StatusBar } from '@capacitor/status-bar';
+import { ConfigService } from './services/config.service';
+import { ReportService } from './services/report.service';
 
 @Component({
   selector: 'app-root',
@@ -7,16 +8,28 @@ import { StatusBar } from '@capacitor/status-bar';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {
-    StatusBar.setOverlaysWebView({ overlay: true }).catch(()=>{});;
-    this.hideStatusBar().catch(()=>{});;
+
+  Departments: any[] = [];
+  AllReports;
+
+  constructor(
+    private configService: ConfigService,
+    private reportService: ReportService,
+  ) {
+    
+
   }
 
-  async ionViewWillEnter(){
-    this.hideStatusBar();
+  ngOnInit() {
+
+    this.configService.getDepartments().subscribe((data: any) => {
+      this.Departments = data;
+    });
+
+    console.log(this.reportService.countAllReports().subscribe((data: any) => {
+      this.AllReports = data;
+    }));
+
   }
 
-  async hideStatusBar () {
-    await StatusBar.hide();
-  };
 }

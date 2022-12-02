@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { IonIcon, Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import * as L from 'leaflet';
 import { HttpClient } from '@angular/common/http';
-import { Geolocation } from '@capacitor/geolocation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
 
-  map: L.Map;
-  coordinates
 
   public markerLatitude: number;
   public markerLongitude: number;
@@ -20,44 +17,43 @@ export class MapService {
     public Platform: Platform,
   ) { }
 
-  async initOSM(latitude: number, longitude: number, map: string) {
+  async initOSM(latitude: number, longitude: number, target: string) {
+    let map: L.Map;
 
-    this.coordinates = await Geolocation.getCurrentPosition()
     this.markerLatitude = latitude;
     this.markerLongitude = longitude;
-    this.map = L.map(map).setView([latitude, longitude], 14);
+    map = L.map(target).setView([latitude, longitude], 14);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(this.map);
+    }).addTo(map);
 
     const marker = L.marker([latitude, longitude], {
       draggable: true,
-    }).addTo(this.map)
+    }).addTo(map)
 
     marker.on('dragend', () => {
       this.markerLatitude = marker.getLatLng().lat;
       this.markerLongitude = marker.getLatLng().lng;
     });
-    console.log('current position -> ', this.coordinates);
   }
 
-  async initOSMWithDescription(latitude: number, longitude: number, map: string, img: string) {
+  async initOSMWithDescription(latitude: number, longitude: number, target: string) {
+    console.log(latitude);
+    console.log(longitude);
+    console.log(target);
 
-    const popuphtml = `<img width='100%' height='100%' src='${img}' />`;
+    let map: L.Map;
 
-    this.coordinates = await Geolocation.getCurrentPosition()
-    this.map = L.map(map).setView([latitude, longitude], 14);
+    map = L.map(target).setView([latitude, longitude], 14);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(this.map);
+    }).addTo(map);
 
-    L.marker([latitude, longitude]).addTo(this.map)
-      .bindPopup(popuphtml)
+    L.marker([latitude, longitude]).addTo(map)
       .openPopup();
 
-    console.log('current position -> ', this.coordinates);
   }
 
 }

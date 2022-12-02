@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class AuthService {
       phone: phone,
       password: password
     }
-    return this.http.post('http://192.168.1.200:3000/sign-in', request);
+    console.log(`${environment.api}/sign-in`);
+    return this.http.post(`${environment.api}/sign-in`, request);
   }
 
   SignUp
@@ -32,7 +34,7 @@ export class AuthService {
       urlPhoto: "url",
       type: 1
     }
-    return this.http.post('http://192.168.1.200:3000/sign-up', request);
+    return this.http.post(`${environment.api}/sign-up`, request);
   }
 
 }

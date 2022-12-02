@@ -4,26 +4,26 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
+
+import { MapPage } from '../map/map.page';
+import { MapPageModule } from '../map/map.module';
+
 import { HomePageRoutingModule } from './home-routing.module';
-
-import { StreetLightingReportPageModule } from '../street-lighting-report/street-lighting-report.module';
-import { StreetLightingReportPage } from '../street-lighting-report/street-lighting-report.page';
-
-import { WaterPageModule } from '../water/water.module';
-import { WaterPage } from '../water/water.page';
+import { GaleryPage } from '../galery/galery.page';
+import { GaleryPageModule } from '../galery/galery.module';
 
 @NgModule({
   entryComponents: [
-    StreetLightingReportPage,
-    WaterPage
+    MapPage,
+    GaleryPage
   ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    StreetLightingReportPageModule,
-    WaterPageModule,
+    MapPageModule,
+    GaleryPageModule,
   ],
   declarations: [HomePage]
 })

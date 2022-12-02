@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
@@ -20,17 +20,37 @@ const routes: Routes = [
     loadChildren: () => import('./pages/register-user/register-user.module').then( m => m.RegisterUserPageModule)
   },
   {
-    path: 'street-lighting-report',
-    loadChildren: () => import('./pages/street-lighting-report/street-lighting-report.module').then( m => m.StreetLightingReportPageModule)
-  },
-  {
-    path: 'water',
-    loadChildren: () => import('./pages/water/water.module').then( m => m.WaterPageModule)
-  },
-  {
     path: 'galery',
     loadChildren: () => import('./pages/galery/galery.module').then( m => m.GaleryPageModule)
-  }
+  },
+  {
+    path: 'public-service',
+    loadChildren: () => import('./pages/public-service/public-service.module').then( m => m.PublicServicePageModule)
+  },
+  {
+    path: 'siue',
+    loadChildren: () => import('./pages/siue/siue.module').then( m => m.SiuePageModule)
+  },
+  {
+    path: 'security',
+    loadChildren: () => import('./pages/security/security.module').then( m => m.SecurityPageModule)
+  },
+  {
+    path: 'ecology',
+    loadChildren: () => import('./pages/ecology/ecology.module').then( m => m.EcologyPageModule)
+  },
+  {
+    path: 'map',
+    loadChildren: () => import('./pages/map/map.module').then( m => m.MapPageModule)
+  },
+  {
+    path: 'advance-search',
+    loadChildren: () => import('./pages/advance-search/advance-search.module').then( m => m.AdvanceSearchPageModule)
+  },
+  {
+    path: 'custom-reports',
+    loadChildren: () => import('./pages/custom-reports/custom-reports.module').then( m => m.CustomReportsPageModule)
+  },
 ];
 
 @NgModule({

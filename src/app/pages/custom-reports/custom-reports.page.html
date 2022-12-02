@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+    <ion-title>Reports</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-accordion-group expand="compact">
+    <div *ngFor="let report of reports; let i = index">
+      <ion-accordion>
+        <ion-item style="--background: #f6f5f5; color: black;" slot="header">
+          <ion-icon class="ion-accordion-toggle-icon" name="{{report.department.icon}}"
+            style="color: {{report.department.color}}; width: 20px; height: 20px" slot="start"></ion-icon>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  {{report.createdAt | date: 'M/d h:m'}}
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-label>{{report.description}}</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-item>
+            <ion-text>
+              Descripción: <br> {{report.description}}
+            </ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-text>
+              Telefono: (falta en bd)
+            </ion-text>
+          </ion-item>
+          <ion-item>
+            <ion-text>
+              Fecha: <br> {{report.createdAt | date: 'short'}}
+            </ion-text>
+          </ion-item>
+          <ion-buttons>
+            <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openMap()">
+              <ion-icon slot="end" name="location-sharp"></ion-icon>
+              <ion-label> Ver mapa </ion-label>
+            </ion-button>
+            <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openPhoto(report._id)">
+              <ion-icon slot="end" name="image"></ion-icon>
+              <ion-label> Ver foto </ion-label>
+            </ion-button>
+          </ion-buttons>
+        </div>
+      </ion-accordion>
+    </div>
+  </ion-accordion-group>
+</ion-content>

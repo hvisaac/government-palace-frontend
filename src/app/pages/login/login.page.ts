@@ -23,7 +23,13 @@ export class LoginPage implements OnInit {
     ) { }
 
   ngOnInit() {
-    sessionStorage.clear();
+    let CurrentUser = JSON.parse(sessionStorage.getItem('user'));
+    console.log(CurrentUser);
+    if (CurrentUser != null) {
+      this.NavController.navigateRoot('/home');
+    } else {
+      sessionStorage.clear();
+    }
     this.MenuController.enable(false);
   }
 

@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { IonSegment, MenuController, NavController, ModalController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { MapService } from 'src/app/services/map.service';
 import { UserInterface } from '../../interfaces/user-interface';
 import { ReportService } from '../../services/report.service';
-import { StreetLightingReportPage } from '../street-lighting-report/street-lighting-report.page';
-import { WaterPage } from '../water/water.page';
+import { Geolocation } from '@capacitor/geolocation';
+import { MapPage } from '../map/map.page';
+import { GaleryPage } from '../galery/galery.page';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,6 @@ import { WaterPage } from '../water/water.page';
 })
 export class HomePage {
 
-  segment = 'all';
   CurrentUser: UserInterface;
   Reports: any[] = [];
 
@@ -22,53 +22,84 @@ export class HomePage {
       private NavController: NavController,
       private ReportService: ReportService,
       private MenuController: MenuController,
-      private ModalController: ModalController,
       private MapService: MapService,
+      private modalController: ModalController,
     ) { }
 
   ngOnInit() {
-    this.MenuController.enable(true);
+    this.MenuController.enable(false);
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
-    if (this.CurrentUser[0]._id == '' || this.CurrentUser[0]._id == null) {
+    console.log(this.CurrentUser);
+    if (this.CurrentUser == null) {
       this.NavController.navigateRoot('/login');
-    }
-
-    this.ReportService.getMyReports(this.CurrentUser[0]._id).subscribe((Reports: any) => {
-      console.log(Reports);
-      for (let report of Reports) {
-        report.department = JSON.parse(report.department);
-        this.Reports.push(report);
+    } else {
+      if (this.CurrentUser[0].type == 1) {
+        this.MenuController.enable(true);
+        this.ReportService.getAllReports().subscribe((Reports: any) => {
+          console.log(Reports);
+          for (let report of Reports) {
+            report.department = JSON.parse(report.department);
+            this.Reports.push(report);
+          }
+        });
+      } else {
+        this.ReportService.getMyReports(this.CurrentUser[0].department).subscribe((reports: any[]) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            this.Reports.push(report);
+          }
+        });
       }
-      console.log(this.Reports);
-    });
+    }
   }
 
-  async openStreetLightingRerpot() {
-    const modal = await this.ModalController.create({
-      component: StreetLightingReportPage,
+  async openMap() {
+    let coordinates = await Geolocation.getCurrentPosition();
+    const modal = await this.modalController.create({
+      component: MapPage,
       componentProps: {
-        CurrentUser: this.CurrentUser,
+        Latitude: coordinates.coords.latitude,
+        Longitude: coordinates.coords.longitude,
       }
     });
 
-    modal.present();
+    await modal.present();
+
   }
 
-  async openWaterRerpot() {
-    const modal = await this.ModalController.create({
-      component: WaterPage,
+  async openPhoto(_id: string) {
+    const modal = await this.modalController.create({
+      component: GaleryPage,
+      componentProps: {
+        _idReport: _id,
+      }
     });
 
-    modal.present();
+    await modal.present();
+
   }
 
-  segmentChange(event) {
-    this.segment = event.detail.value;
+  changeStatus(_id: string, status: number) {
+    this.ReportService.changeStatus(_id, status).subscribe(Response => {
+      console.log(Response);
+      this.doRefresh();
+    });
   }
 
-  ionViewDidEnter() {
-    for (let i = 0; i < this.Reports.length; i++) {
-      this.MapService.initOSMWithDescription(this.Reports[i].geolocation.latitude, this.Reports[i].geolocation.longitude, 'map'+i,  this.Reports[i].photo);
-    }
+  doRefresh() {
+    setTimeout(() => {
+      this.Reports = [];
+      this.ReportService.getMyReports(this.CurrentUser[0].department).subscribe((reports: any[]) => {
+        for (let report of reports) {
+          report.department = JSON.parse(report.department);
+          this.Reports.push(report);
+        }
+      });
+    }, 1500);
+  }
+
+  logout() {
+    sessionStorage.clear();
+    this.NavController.navigateRoot('/login');
   }
 }

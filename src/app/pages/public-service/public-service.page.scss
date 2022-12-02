@@ -1,0 +1,23 @@
+
+ion-content {
+    --background: rgb(255, 255, 255);
+  
+    ion-list {
+      padding: 30px;
+      background: rgb(255, 255, 255);
+  
+      ion-card{
+        margin-top: 0px;
+        border-radius: 20px;
+        border-style: solid;
+      }
+  
+      .iconCard{
+        padding: 10px;
+        height: 50px;
+        width: 50px;
+        border-radius: 100%;
+        border-style: solid;
+      }
+    }
+  }

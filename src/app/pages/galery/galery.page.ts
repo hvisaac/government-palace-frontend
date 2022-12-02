@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PhotoInterface } from 'src/app/interfaces/photo-interface';
 import { ModalController } from '@ionic/angular';
+import { ReportService } from 'src/app/services/report.service';
 
 @Component({
   selector: 'app-galery',
@@ -9,13 +10,18 @@ import { ModalController } from '@ionic/angular';
 })
 export class GaleryPage implements OnInit {
 
-  @Input() photo: PhotoInterface;
+  @Input() _idReport: string;
+  photo: string;
 
   constructor(
-    private ModalController: ModalController
+    private ModalController: ModalController,
+    private reportService: ReportService
   ) { }
 
   ngOnInit() {
+    this.reportService.getReportById(this._idReport).subscribe((data: any) => {
+      this.photo = data[0].photo;
+    })
   }
 
   dismiss(){
