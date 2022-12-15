@@ -9,6 +9,7 @@ ion-toolbar{
 
 ion-item{
     --background: #B22241;
+    color: #f6f5f5;
 }
 
 ion-item-divider{
@@ -22,6 +23,7 @@ ion-header{
 ion-list{
     background: #B22241;
 }
+
 
 ion-menu::part(container) {
     border-radius: 0 50px 50px 0;

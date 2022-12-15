@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { MapService } from 'src/app/services/map.service';
 import { UserInterface } from '../../interfaces/user-interface';
@@ -6,6 +6,9 @@ import { ReportService } from '../../services/report.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { MapPage } from '../map/map.page';
 import { GaleryPage } from '../galery/galery.page';
+import { ConfigService } from 'src/app/services/config.service';
+import { Chart } from 'chart.js';
+import { ReportsPerDepartmentPage } from '../reports-per-department/reports-per-department.page';
 
 @Component({
   selector: 'app-home',
@@ -15,91 +18,147 @@ import { GaleryPage } from '../galery/galery.page';
 export class HomePage {
 
   CurrentUser: UserInterface;
-  Reports: any[] = [];
+  @ViewChild('doughnutCanvas') private doughnutCanvas: ElementRef;
+  barChart: any;
+  doughnutChart: any;
+  departments: any[] = [];
+  departmentsNames: any[] = [];
+  departmentsColors: any[] = [];
+  departmentsReports: any[] = [];
+  departmentsWorkingReports: any[] = [];
+  departmentsFinishedsReports: any[] = [];
+  option: number;
 
-  constructor
-    (
-      private NavController: NavController,
-      private ReportService: ReportService,
-      private MenuController: MenuController,
-      private MapService: MapService,
-      private modalController: ModalController,
-    ) { }
+  constructor(
+    private menuController: MenuController,
+    private navController: NavController,
+    private configService: ConfigService,
+    private modalController: ModalController,
+
+  ) { }
 
   ngOnInit() {
-    this.MenuController.enable(false);
+    this.menuController.enable(false);
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
     console.log(this.CurrentUser);
     if (this.CurrentUser == null) {
-      this.NavController.navigateRoot('/login');
+      this.navController.navigateRoot('/login');
     } else {
-      if (this.CurrentUser[0].type == 1) {
-        this.MenuController.enable(true);
-        this.ReportService.getAllReports().subscribe((Reports: any) => {
-          console.log(Reports);
-          for (let report of Reports) {
-            report.department = JSON.parse(report.department);
-            this.Reports.push(report);
-          }
-        });
-      } else {
-        this.ReportService.getMyReports(this.CurrentUser[0].department).subscribe((reports: any[]) => {
-          for (let report of reports) {
-            report.department = JSON.parse(report.department);
-            this.Reports.push(report);
-          }
-        });
-      }
+      this.menuController.enable(true);
+      let superUser = false;
+      this.configService.getUserType(this.CurrentUser[0].role).subscribe((role: any) => {
+        superUser = role[0].superUser;
+        console.log(role)
+      })
+      this.configService.getDepartments().subscribe((departments: any[]) => {
+        this.departments = departments;
+        for (const department of departments) {
+          this.departmentsNames.push(department.name);
+          this.departmentsColors.push(department.color);
+          this.departmentsReports.push(department.reports);
+          this.departmentsWorkingReports.push(department.workingReports);
+          this.departmentsFinishedsReports.push(department.finishedsReports);
+        }
+      });
+
+      setTimeout(() => {
+        if (superUser) {
+          this.doughnutChartMethod();
+        } else {
+          this.doughnutChartMethodDepartment(this.CurrentUser[0].department);
+        }
+      }, 1500);
     }
   }
 
-  async openMap() {
-    let coordinates = await Geolocation.getCurrentPosition();
-    const modal = await this.modalController.create({
-      component: MapPage,
-      componentProps: {
-        Latitude: coordinates.coords.latitude,
-        Longitude: coordinates.coords.longitude,
-      }
-    });
-
-    await modal.present();
-
+  openMenu() {
+    this.menuController.open();
   }
 
-  async openPhoto(_id: string) {
-    const modal = await this.modalController.create({
-      component: GaleryPage,
-      componentProps: {
-        _idReport: _id,
-      }
-    });
 
-    await modal.present();
+  doughnutChartMethod() {
+    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+      type: 'pie',
+      data: {
+        labels: this.departmentsNames,
+        datasets: [{
+          label: 'Reportes',
+          data: this.departmentsReports,
+          backgroundColor: this.departmentsColors,
+          hoverBackgroundColor: this.departmentsColors
+        }],
+      },
+      options: {
+        onClick: (event, element, chart) => {
+          this.openReports(this.departments[element[0].index]._id);
+        },
+        plugins: {
+          tooltip: {
+            enabled: false,
+          },
+          legend: {
+            labels: {
+              // This more specific font property overrides the global property
+              color: '#f6f5f5',
+              font: {
+                weight: 'bold',
+              }
+            },
+            fullSize: true,
 
-  }
-
-  changeStatus(_id: string, status: number) {
-    this.ReportService.changeStatus(_id, status).subscribe(Response => {
-      console.log(Response);
-      this.doRefresh();
-    });
-  }
-
-  doRefresh() {
-    setTimeout(() => {
-      this.Reports = [];
-      this.ReportService.getMyReports(this.CurrentUser[0].department).subscribe((reports: any[]) => {
-        for (let report of reports) {
-          report.department = JSON.parse(report.department);
-          this.Reports.push(report);
+          }
         }
-      });
-    }, 1500);
+      }
+    });
   }
 
-  logout() {
-    sessionStorage.clear();
-    this.NavController.navigateRoot('/login');
+  doughnutChartMethodDepartment(department) {
+    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+      type: 'pie',
+      data: {
+        labels: this.departmentsNames,
+        datasets: [{
+          label: 'Reportes',
+          data: this.departmentsReports,
+          backgroundColor: this.departmentsColors,
+          hoverBackgroundColor: this.departmentsColors
+        }],
+      },
+      options: {
+        onClick: () => {
+          console.log(department)
+          this.openReports(department);
+        },
+        plugins: {
+          tooltip: {
+            enabled: false,
+          },
+          legend: {
+            labels: {
+              // This more specific font property overrides the global property
+              color: '#f6f5f5',
+              font: {
+                weight: 'bold',
+              }
+            },
+            fullSize: true,
+
+          }
+        }
+      }
+    });
   }
+
+  async openReports(id) {
+    const modal = await this.modalController.create({
+      component: ReportsPerDepartmentPage,
+      componentProps: {
+        typeReport: id,
+      }
+    });
+
+    await modal.present();
+
+  }
+
 }

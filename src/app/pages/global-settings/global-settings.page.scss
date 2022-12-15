@@ -1,0 +1,33 @@
+ion-content{
+    --background: #B22241;
+}
+
+ion-toolbar{
+    --background: #f6f5f5;
+}
+
+.form {
+    padding: 15px;
+    ion-list {
+        border-radius: 20px;
+    }
+}
+
+ion-list {
+    background: #B22241;
+    ion-item {
+        --background: #B22241;
+    }
+    ion-item-divider {
+        background: #7c1734;
+        color: #f6f5f5;
+        font-weight: bold;
+        ion-item {
+            --background: #7c1734;
+        }
+    }
+}
+
+ion-back-button {
+    display: block;
+}

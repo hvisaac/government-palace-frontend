@@ -21,7 +21,7 @@ export class ReportService {
     const request = {
       content: content
     }
-    return this.http.post(`${environment.api}/my-reports/get-by-content/`, request);
+    return this.http.post(`${environment.api}/my-reports/get-by-content`, request);
   }
 
   getReportsByDate(beginDate: Date, finalDate: Date) {
@@ -33,7 +33,7 @@ export class ReportService {
     return this.http.post(`${environment.api}/my-reports/get-by-date`, request);
   }
 
-   getMyReports(department: string) {
+  getMyReports(department: string) {
     return this.http.get(`${environment.api}/my-reports/${department}`);
   }
 
@@ -52,5 +52,15 @@ export class ReportService {
       status: status,
     }
     return this.http.post(`${environment.api}/my-reports/change-status`, request);
+  }
+
+  finishReport(_id: string, photo: string, description: string) {
+    const request = {
+      _id: _id,
+      photo: photo,
+      description: description
+    }
+
+    return this.http.post(`${environment.api}/my-reports/finish-report`, request);
   }
 }

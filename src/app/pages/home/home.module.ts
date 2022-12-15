@@ -5,25 +5,20 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 
-import { MapPage } from '../map/map.page';
-import { MapPageModule } from '../map/map.module';
-
 import { HomePageRoutingModule } from './home-routing.module';
-import { GaleryPage } from '../galery/galery.page';
-import { GaleryPageModule } from '../galery/galery.module';
+import { ReportsPerDepartmentPage } from '../reports-per-department/reports-per-department.page';
+import { ReportsPerDepartmentPageModule } from '../reports-per-department/reports-per-department.module';
 
 @NgModule({
   entryComponents: [
-    MapPage,
-    GaleryPage
+    ReportsPerDepartmentPage
   ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    MapPageModule,
-    GaleryPageModule,
+    ReportsPerDepartmentPageModule
   ],
   declarations: [HomePage]
 })

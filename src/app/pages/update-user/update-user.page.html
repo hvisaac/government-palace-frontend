@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="header">
+    <h1>Crear una <br> nueva cuenta</h1>
+  </div>
+
+  <div class="form">
+    <ion-input placeholder="Nombre(s)" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Apellidos" [(ngModel)]="lastname" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Número de teléfono" type="number" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
+    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="departmentSelect"
+      placeholder="Departamento">
+      <ion-list *ngFor="let department of departments">
+        <ion-select-option value="{{department._id}}">{{department.name}}</ion-select-option>
+      </ion-list>
+    </ion-select>
+    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="roleSelect"
+    placeholder="Rol">
+    <ion-list *ngFor="let role of roles">
+      <ion-select-option *ngIf="role.name != 'admin'" value="{{role._id}}">{{role.name}}</ion-select-option>
+    </ion-list>
+  </ion-select>
+  </div>
+
+  <div class="button" (click)="SignUp(phone, name, lastname, department, role)">
+    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+
+</ion-content>

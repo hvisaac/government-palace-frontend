@@ -1,0 +1,73 @@
+<ion-header [translucent]="false">
+  <ion-toolbar>
+    <ion-chip style="color: #f6f5f5; background: #7c1734; height: 80px;" (click)="openMenu()" slot="start">
+      <ion-avatar>
+        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+      <ion-label>{{CurrentUser[0].name + " " + CurrentUser[0].lastname}}</ion-label>
+    </ion-chip>
+    <ion-img slot="end" src="assets/mascot/Idle.gif" style="height: 120PX; width: 120PX; margin: auto;"></ion-img>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-accordion-group expand="compact">
+    <ion-grid>
+
+      <div *ngFor="let report of Reports; let i = index">
+        <ion-row>
+          <ion-col size="10">
+            <ion-accordion style="border-radius: 10px;">
+              <ion-item style="--background: #7c1734; color: #f6f5f5;" slot="header">
+                <ion-icon class="ion-accordion-toggle-icon" name="{{report.department.icon}}"
+                  style="color: {{report.department.color}}; width: 20px; height: 20px" slot="start"></ion-icon>
+                <ion-label>{{report.createdAt | date: 'M/d h:m'}} | {{report.description}}</ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content" style="background: {{report.department.color}}; color: #f6f5f5;">
+                <ion-item style="--background: {{report.department.color}}; color: #f6f5f5;">
+                  <ion-text style="width: 100%; height: 100%;">
+                    Descripción: <br> {{report.description}}
+                  </ion-text>
+                </ion-item>
+                <ion-item style="--background: {{report.department.color}}; color: #f6f5f5;">
+                  <ion-text>
+                    Telefono: (falta en bd)
+                  </ion-text>
+                </ion-item>
+                <ion-item style="--background: {{report.department.color}}; color: #f6f5f5;">
+                  <ion-text>
+                    Fecha: <br> {{report.createdAt | date: 'short'}}
+                  </ion-text>
+                </ion-item>
+                <ion-buttons>
+                  <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openMap()">
+                    <ion-icon slot="end" name="location-sharp"></ion-icon>
+                    <ion-label> Ver mapa </ion-label>
+                  </ion-button>
+                  <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openPhoto(report._id)">
+                    <ion-icon slot="end" name="image"></ion-icon>
+                    <ion-label> Ver foto </ion-label>
+                  </ion-button>
+                </ion-buttons>
+              </div>
+            </ion-accordion>
+          </ion-col>
+          <ion-col [ngSwitch]="report.status" size="2" style="text-align: center; align-self: center;">
+            <ion-button (click)="changeStatus(report._id, 1)" fill="clear" *ngSwitchCase="0">
+              <ion-icon slot="icon-only" name="timer" style="color: rgb(84, 178, 221);">
+              </ion-icon>
+            </ion-button>
+            <ion-button (click)="changeStatus(report._id, 2)" fill="clear" *ngSwitchCase="1">
+              <ion-icon slot="icon-only" name="construct" style=" color: rgb(245, 231, 35);">
+              </ion-icon>
+            </ion-button>
+            <ion-button fill="clear" *ngSwitchCase="2">
+              <ion-icon slot="icon-only" name="checkmark" style=" color: rgb(119, 224, 133);">
+              </ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-grid>
+  </ion-accordion-group>
+</ion-content>

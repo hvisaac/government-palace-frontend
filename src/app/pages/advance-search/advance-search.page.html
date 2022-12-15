@@ -1,12 +1,12 @@
 <ion-header [translucent]="false">
   <ion-toolbar>
-    <ion-menu-button style="color: white;" menu="main-menu" slot="start"> </ion-menu-button>
-    <ion-chip style="color: #f6f5f5; background: #7c1734;" id="popover-button" slot="end">
+    <ion-chip style="color: #f6f5f5; background: #7c1734; height: 80px;" (click)="openMenu()" slot="start">
       <ion-avatar>
         <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
       </ion-avatar>
       <ion-label>{{CurrentUser[0].name + " " + CurrentUser[0].lastname}}</ion-label>
     </ion-chip>
+    <ion-img slot="end" src="assets/mascot/Idle.gif" style="height: 120PX; width: 120PX; margin: auto;"></ion-img>
   </ion-toolbar>
 </ion-header>
 

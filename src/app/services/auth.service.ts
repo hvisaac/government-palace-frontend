@@ -24,7 +24,9 @@ export class AuthService {
       phone: string,
       password: string,
       name: string,
-      lastname: string
+      lastname: string,
+      department: string,
+      role: string
     ) {
     let request = {
       phone: phone,
@@ -32,7 +34,8 @@ export class AuthService {
       name: name,
       lastname: lastname,
       urlPhoto: "url",
-      type: 1
+      department: department,
+      role: role
     }
     return this.http.post(`${environment.api}/sign-up`, request);
   }

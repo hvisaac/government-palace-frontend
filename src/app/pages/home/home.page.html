@@ -1,93 +1,64 @@
 <ion-header [translucent]="false">
   <ion-toolbar>
-    <ion-menu-button style="color: #7c1734;" menu="main-menu" slot="start"> </ion-menu-button>
-    <ion-chip style="color: #f6f5f5; background: #7c1734;" id="popover-button" slot="end">
+    <ion-chip style="color: #f6f5f5; background: #7c1734; height: 80px;" (click)="openMenu()" slot="start">
       <ion-avatar>
         <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
       </ion-avatar>
       <ion-label>{{CurrentUser[0].name + " " + CurrentUser[0].lastname}}</ion-label>
     </ion-chip>
+    <ion-img slot="end" src="assets/mascot/Idle.gif" style="height: 120PX; width: 120PX; margin: auto;"></ion-img>
   </ion-toolbar>
 </ion-header>
 
-<ion-popover trigger="popover-button" [dismissOnSelect]="true">
-  <ng-template>
-    <ion-content style="--background: #7c1734;">
-      <ion-list style="--background: #7c1734;">
-        <ion-item style="color: #f6f5f5; --background: #7c1734" (click)="logout()">
-          <ion-label>Cerrar sesión</ion-label>
-          <ion-icon slot="end" name="log-out-outline"></ion-icon>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ng-template>
-</ion-popover>
+<ion-content>
 
-<ion-content [fullscreen]="true">
-  <ion-accordion-group expand="compact">
+  <canvas #doughnutCanvas style="position: relative; height:20vh; width:40vw; margin-top: 10%;"></canvas>
+
+  <ion-list style="margin-top: 5%;">
     <ion-grid>
-
-      <div *ngFor="let report of Reports; let i = index">
-        <ion-row>
-          <ion-col>
-            <ion-accordion style="border-radius: 10px;">
-              <ion-item style="--background: #7c1734; color: #f6f5f5;" slot="header">
-                <ion-icon class="ion-accordion-toggle-icon" name="{{report.department.icon}}"
-                  style="color: {{report.department.color}}; width: 20px; height: 20px" slot="start"></ion-icon>
-                <ion-grid>
-                  <ion-row>
-                    <ion-col size="6">
-                      {{report.createdAt | date: 'M/d h:m'}}
-                    </ion-col>
-                  </ion-row>
-                  <ion-row>
-                    <ion-col>
-                      <ion-label>{{report.description}}</ion-label>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-item>
-              <div class="ion-padding" slot="content" style="background: {{report.department.color}}; color: #f6f5f5;">
-                <ion-item style="--background: {{report.department.color}}; color: #f6f5f5;">
-                  <ion-text>
-                    Descripción: <br> {{report.description}}
-                  </ion-text>
-                </ion-item>
-                <ion-item style="--background: {{report.department.color}}; color: #f6f5f5;">
-                  <ion-text>
-                    Telefono: (falta en bd)
-                  </ion-text>
-                </ion-item>
-                <ion-item style="--background: {{report.department.color}}; color: #f6f5f5;">
-                  <ion-text>
-                    Fecha: <br> {{report.createdAt | date: 'short'}}
-                  </ion-text>
-                </ion-item>
-                <ion-buttons>
-                  <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openMap()">
-                    <ion-icon slot="end" name="location-sharp"></ion-icon>
-                    <ion-label> Ver mapa </ion-label>
-                  </ion-button>
-                  <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openPhoto(report._id)">
-                    <ion-icon slot="end" name="image"></ion-icon>
-                    <ion-label> Ver foto </ion-label>
-                  </ion-button>
-                </ion-buttons>
-              </div>
-            </ion-accordion>
-          </ion-col>
-          <ion-col [ngSwitch]="report.status" size="2" style="text-align: center; align-self: center;">
-            <ion-button (click)="changeStatus(report._id, 1)" fill="clear" *ngSwitchCase="0">
-              <ion-icon slot="icon-only" name="timer" style=" rgb(84, 178, 221);">
-              </ion-icon>
-            </ion-button>
-            <ion-button fill="clear" *ngSwitchCase="1">
-              <ion-icon (click)="changeStatus(report._id, 2)" slot="icon-only" name="construct" style=" color: rgb(245, 231, 35);">
-              </ion-icon>
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </div>
+      <ion-row>
+        <ion-col style="font-weight: bold;" size="6">
+          <ion-label>
+            Departamento
+          </ion-label>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon style=" color: rgb(84, 178, 221);" name="timer"></ion-icon>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon style=" color: rgb(245, 231, 35);" name="construct"></ion-icon>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon style=" color: rgb(119, 224, 133);" name="checkmark"></ion-icon>
+        </ion-col>
+      </ion-row>
     </ion-grid>
-  </ion-accordion-group>
+  </ion-list>
+  <ion-list *ngFor="let department of departments">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-label>
+            {{department.name}}
+          </ion-label>
+        </ion-col>
+        <ion-col size="2">
+          <ion-label>
+            {{department.pendingReports}}
+          </ion-label>
+        </ion-col>
+        <ion-col size="2">
+          <ion-label>
+            {{department.workingReports}}
+          </ion-label>
+        </ion-col>
+        <ion-col size="2">
+          <ion-label>
+            {{department.finishedsReports}}
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+
 </ion-content>

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavController, MenuController } from '@ionic/angular';
+import { ConfigService } from 'src/app/services/config.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class LoginPage implements OnInit {
       private AuthService: AuthService,
       private NavController: NavController,
       private MenuController: MenuController,
+      private configService: ConfigService,
     ) { }
 
   ngOnInit() {
@@ -37,6 +39,9 @@ export class LoginPage implements OnInit {
     this.AuthService.SignIn(phone, password).subscribe((data: any) => {
       if (data.length > 0) {
         sessionStorage.setItem('user', JSON.stringify(data));
+        this.configService.getUserType(data[0].role).subscribe((role) => {
+          sessionStorage.setItem('permissions', JSON.stringify(role));
+        });
         this.NavController.navigateRoot('/home');
       } else {
         console.log("user not found");

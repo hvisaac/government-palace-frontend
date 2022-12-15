@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavController, MenuController } from '@ionic/angular';
+import { NavController, MenuController, ModalController } from '@ionic/angular';
+import { ConfigService } from 'src/app/services/config.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -8,6 +9,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./register-user.page.scss'],
 })
 export class RegisterUserPage implements OnInit {
+  departments: any[];
+  roles: any[];
 
   @Input()
   phone: string;
@@ -16,45 +19,57 @@ export class RegisterUserPage implements OnInit {
   password: string;
 
   @Input()
-  repassword: string;
-
-  @Input()
   name: string;
 
   @Input()
   lastname: string;
 
+  @Input()
+  department: string
+
+  @Input()
+  role: string
+
   constructor(
     private AuthService: AuthService,
-    private NavController: NavController,
-    private MenuController: MenuController
+    private configService: ConfigService,
+    private modalController: ModalController,
   ) { }
 
   ngOnInit() {
-    this.MenuController.enable(false);
+    this.configService.getDepartments().subscribe((data: any) => {
+      this.departments = data;
+      console.log(this.departments)
+    });
+    this.configService.getUserTypes().subscribe((data: any) => {
+      this.roles = data;
+      console.log(this.roles)
+    });
   }
 
   SignUp
     (
       phone: string,
       password: string,
-      repassword: string,
       name: string,
-      lastname: string
+      lastname: string,
+      department: string, 
+      role: string
     ) {
     this.AuthService.SignUp
       (
         phone,
         password,
         name,
-        lastname
+        lastname,
+        department,
+        role,
       )
-      .subscribe((data: any) => {
-        if (data.length > 0) {
-          this.NavController.navigateRoot('/login');
-        } else {
-          console.log("user not found");
-        }
-      });
+      .subscribe(response => this.modalController.dismiss({response}));
   }
+
+  dismiss(){
+    this.modalController.dismiss({response: 'exit'});
+  }
+
 }

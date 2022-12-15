@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="header">
+    <h1>Crear un <br> nuevo departamento</h1>
+  </div>
+
+  <div class="form">
+    <ion-input placeholder="Nombre" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-icon style="color: {{color}};" name="color-filter"></ion-icon>  
+    <ion-label> {{color}} </ion-label>  
+    <div style="width: 100%;" id="colorPicker"></div>
+    <ion-input placeholder="Icono" [(ngModel)]="icon" #ctrl="ngModel"></ion-input>
+  </div>
+
+  <div class="button" (click)="addDepartment(name, color, icon)">
+    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+
+</ion-content>

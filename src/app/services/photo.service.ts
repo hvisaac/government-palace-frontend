@@ -8,7 +8,6 @@ import { PhotoInterface } from '../interfaces/photo-interface';
 })
 export class PhotoService {
   public photo: PhotoInterface;
-  public apiPhoto: string;
 
   constructor() { }
 
@@ -25,8 +24,7 @@ export class PhotoService {
     };
 
     // Save the picture and add it to photo collection
-    const savedImageFile = await this.readAsBase64(capturedPhoto);
-    this.apiPhoto = savedImageFile;
+    return await this.readAsBase64(capturedPhoto);  
   }
 
   private async readAsBase64(photo: Photo) {
@@ -45,6 +43,5 @@ export class PhotoService {
     };
     reader.readAsDataURL(blob);
   });
-
 
 }

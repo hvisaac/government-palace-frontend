@@ -1,0 +1,33 @@
+<ion-header [translucent]="false">
+  <ion-toolbar>
+    <ion-chip style="color: #f6f5f5; background: #7c1734; height: 80px;" (click)="openMenu()" slot="start">
+      <ion-avatar>
+        <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      </ion-avatar>
+      <ion-label>{{CurrentUser[0].name + " " + CurrentUser[0].lastname}}</ion-label>
+    </ion-chip>
+    <ion-img slot="end" src="assets/mascot/Idle.gif" style="height: 120PX; width: 120PX; margin: auto;"></ion-img>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment (ionChange)="segmentChange($event)" [(ngModel)]="option" value=1>
+    <ion-segment-button value=1>
+      <ion-icon name="bar-chart"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value=2>
+      <ion-icon name="stats-chart"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="option">
+
+    <div *ngSwitchCase="1" style="--background: rgb(32, 32, 32);">
+      <canvas #barCanvas style="position: relative; height:20vh; width:40vw; margin-top: 10%;"></canvas>
+    </div>
+
+    <div *ngSwitchCase="2" style="--background: rgb(32, 32, 32);">
+      <canvas #pointCanvas style="position: relative; height:20vh; width:40vw; margin-top: 10%;"></canvas>
+    </div>
+  </div>
+</ion-content>

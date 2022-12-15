@@ -1,3 +1,9 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
 
   <div class="header">
@@ -9,13 +15,22 @@
     <ion-input placeholder="Apellidos" [(ngModel)]="lastname" #ctrl="ngModel"></ion-input>
     <ion-input placeholder="Número de teléfono" type="number" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
     <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" #ctrl="ngModel"></ion-input>
-    <ion-input placeholder="Repetir Contraseña" type="password" [(ngModel)]="repassword" #ctrl="ngModel"></ion-input>
+    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="department"
+      placeholder="Departamento">
+      <ion-list *ngFor="let department of departments">
+        <ion-select-option value="{{department._id}}">{{department.name}}</ion-select-option>
+      </ion-list>
+    </ion-select>
+    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="role"
+    placeholder="Rol">
+    <ion-list *ngFor="let role of roles">
+      <ion-select-option *ngIf="role.name != 'admin'" value="{{role._id}}">{{role.name}}</ion-select-option>
+    </ion-list>
+  </ion-select>
   </div>
 
-  <div class="button" (click)="SignUp(phone, password, repassword, name, lastname)">
-    Registrarse <ion-icon name="chevron-forward-outline"></ion-icon>
+  <div class="button" (click)="SignUp(phone, password, name, lastname, department, role)">
+    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
   </div>
-  <div class="footer">
-    <h3 routerLink="/login">¿Ya tienes una cuenta? <span>Inicia Sesión</span></h3>
-  </div>
+
 </ion-content>

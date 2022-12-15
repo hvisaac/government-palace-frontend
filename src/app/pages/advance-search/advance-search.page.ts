@@ -86,5 +86,8 @@ export class AdvanceSearchPage implements OnInit {
 
   }
 
+  openMenu() {
+    this.MenuController.open();
+  }
 
 }
