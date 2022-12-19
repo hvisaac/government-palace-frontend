@@ -11,18 +11,18 @@
 </ion-header>
 
 <ion-content>
-  <ion-segment (ionChange)="segmentChange($event)" [(ngModel)]="option" value=1>
+  <ion-segment (ionChange)="segmentChange($event)" [(ngModel)]="option" [scrollable]="true">
     <ion-segment-button value=1>
       <ion-icon name="person"></ion-icon>
     </ion-segment-button>
-    <ion-segment-button value=2>
+    <ion-segment-button value=2 *ngIf="CurrentUser[0].hierarchy.level < 1">
       <ion-icon name="people"></ion-icon>
     </ion-segment-button>
-    <ion-segment-button value=3>
-      <ion-icon name="key"></ion-icon>
-    </ion-segment-button>
-    <ion-segment-button value=4>
+    <ion-segment-button value=3 *ngIf="CurrentUser[0].hierarchy.level < 1">
       <ion-icon name="call"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value=4 *ngIf="CurrentUser[0].hierarchy.level < 1">
+      <ion-icon name="briefcase"></ion-icon>
     </ion-segment-button>
   </ion-segment>
 
@@ -39,23 +39,22 @@
           </ion-item-divider>
 
           <div *ngFor="let user of users">
-            <ion-item-sliding *ngIf="user.department == department._id">
+            <ion-item-sliding *ngIf="user.department == department._id && user.hierarchy.level > CurrentUser[0].hierarchy.level">
               <ion-item>
                 <ion-avatar slot="start">
                   <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
                 </ion-avatar>
                 <ion-label>{{user.name}} {{user.lastname}}</ion-label>
               </ion-item>
-              <ion-item-options *ngIf="permissions.canEdit" side="end">
-                <ion-item-option (click)="updateUser(user._id, user.name, user.lastname, user.phone, user.password, user.role, user.department)">
+              <ion-item-options side="end">
+                <ion-item-option
+                  (click)="updateUser(user._id, user.name, user.lastname, user.phone, user.password, user.role, user.department)">
                   <ion-icon slot="icon-only" name="create"></ion-icon>
                 </ion-item-option>
-                <ion-item-option *ngIf="permissions.canDelete" (click)="deleteUser(user._id)" color="danger">
+                <ion-item-option (click)="deleteUser(user._id)" color="danger">
                   <ion-icon slot="icon-only" name="trash"></ion-icon>
                 </ion-item-option>
-                <ion-item-option color="dark">
-                  <ion-icon slot="icon-only" slot="icon-only" name="ellipsis-horizontal"></ion-icon>
-                </ion-item-option>
+
               </ion-item-options>
             </ion-item-sliding>
           </div>
@@ -63,7 +62,7 @@
       </ion-list>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button *ngIf="permissions.canCreate" (click)="addUser()" color="dark">
+        <ion-fab-button (click)="addUser()" color="dark">
           <ion-icon name="person-add"></ion-icon>
         </ion-fab-button>
       </ion-fab>
@@ -76,76 +75,71 @@
             <ion-icon slot="start" name="{{department.icon}}" style="color: {{department.color}};"></ion-icon>
             <ion-label>{{department.name}}</ion-label>
           </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option *ngIf="permissions.canEdit">
+          <ion-item-options side="end" (click)="updateDepartment(department._id, department.name, department.color, department.icon)">
+            <ion-item-option>
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-item-option>
-            <ion-item-option *ngIf="permissions.canDelete" (click)="deleteDepartment(department._id)" color="danger">
+            <ion-item-option (click)="deleteDepartment(department._id)" color="danger">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-            <ion-item-option color="dark">
-              <ion-icon slot="icon-only" slot="icon-only" name="ellipsis-horizontal"></ion-icon>
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button *ngIf="permissions.canCreate" (click)="addDepartment()" color="dark">
+        <ion-fab-button (click)="addDepartment()" color="dark">
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </ion-fab>
     </div>
 
     <div *ngSwitchCase="3" style="--background: rgb(32, 32, 32);">
-      <ion-list *ngFor="let userType of userTypes">
-        <ion-item-sliding *ngIf="userType.name != 'admin'">
-          <ion-item>
-            <ion-label>{{userType.name}}</ion-label>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option *ngIf="permissions.canEdit" (click)="updateUserType(userType._id, userType.name, userType.canCreate, userType.canEdit, userType.canDelete, userType.superUser)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-item-option>
-            <ion-item-option *ngIf="permissions.canDelete" (click)="deleteUserType(userType._id)" color="danger">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-            <ion-item-option color="dark">
-              <ion-icon slot="icon-only" slot="icon-only" name="ellipsis-horizontal"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
-
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button *ngIf="permissions.canCreate" (click)="addUserType()" color="dark">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
-    </div>
-
-    <div *ngSwitchCase="4" style="--background: rgb(32, 32, 32);">
       <ion-list *ngFor="let servicePhone of servicePhones">
         <ion-item-sliding>
           <ion-item>
             <ion-label>{{servicePhone.name}}</ion-label>
           </ion-item>
           <ion-item-options side="end">
-            <ion-item-option *ngIf="permissions.canEdit" (click)="updateServicePhone(servicePhone._id, servicePhone.name, servicePhone.phone)">
+            <ion-item-option
+              (click)="updateServicePhone(servicePhone._id, servicePhone.name, servicePhone.phone)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-item-option>
-            <ion-item-option *ngIf="permissions.canDelete" (click)="deleteServicePhone(servicePhone._id)" color="danger">
+            <ion-item-option (click)="deleteServicePhone(servicePhone._id)"
+              color="danger">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-            <ion-item-option color="dark">
-              <ion-icon slot="icon-only" slot="icon-only" name="ellipsis-horizontal"></ion-icon>
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ion-list>
 
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button *ngIf="permissions.canCreate" (click)="addServicePhone()" color="dark">
+        <ion-fab-button (click)="addServicePhone()" color="dark">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+
+    <div *ngSwitchCase="4" style="--background: rgb(32, 32, 32);">
+      <ion-list *ngFor="let hierarchy of hierarchies">
+        <ion-item-sliding>
+          <ion-item>
+            <ion-label>{{hierarchy.name}}</ion-label>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option
+              (click)="updateHierarchy(hierarchy._id, hierarchy.name, hierarchy.level)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-item-option>
+            <ion-item-option (click)="deleteHierarchy(hierarchy._id)"
+              color="danger">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="addHierarchy()" color="dark">
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </ion-fab>

@@ -49,10 +49,6 @@ export class UpdateUserPage implements OnInit {
       this.departments = data;
       console.log(this.departments)
     });
-    this.configService.getUserTypes().subscribe((data: any) => {
-      this.roles = data;
-      console.log(this.roles)
-    });
     setTimeout(() => {
       this.departmentSelect = this.department;
       this.roleSelect = this.role;

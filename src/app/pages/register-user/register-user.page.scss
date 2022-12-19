@@ -49,6 +49,17 @@ ion-content{
             margin-bottom: 22px;
             --color: rgb(255, 255, 255);
         }
+        ion-item{
+            --background: #7c1734;
+            padding: 10px;
+            border-radius: 15px;
+            --color: rgb(255, 255, 255);
+        }
+        ion-list{
+            background: #7c1734;
+            border-radius: 15px;
+            color: rgb(255, 255, 255);
+        }
     }
 
     .button{

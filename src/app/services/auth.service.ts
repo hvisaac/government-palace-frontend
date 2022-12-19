@@ -10,33 +10,17 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
 
-  SignIn(phone: string, password: string) {
+  SignIn(name: string, password: string) {
     let request = {
-      phone: phone,
+      name: name,
       password: password
     }
     console.log(`${environment.api}/sign-in`);
     return this.http.post(`${environment.api}/sign-in`, request);
   }
 
-  SignUp
-    (
-      phone: string,
-      password: string,
-      name: string,
-      lastname: string,
-      department: string,
-      role: string
-    ) {
-    let request = {
-      phone: phone,
-      password: password,
-      name: name,
-      lastname: lastname,
-      urlPhoto: "url",
-      department: department,
-      role: role
-    }
+  SignUp (request) {
+
     return this.http.post(`${environment.api}/sign-up`, request);
   }
 

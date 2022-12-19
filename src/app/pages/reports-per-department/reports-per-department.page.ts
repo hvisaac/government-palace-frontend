@@ -40,25 +40,25 @@ export class ReportsPerDepartmentPage implements OnInit {
   ngOnInit() {
 
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
+    console.log(this.CurrentUser)
 
-    this.MenuController.enable(true);
-    const superUser = this.configService.getUserType(this.CurrentUser[0].role).subscribe((role: any) => {
-      return role[0].superUser;
-    })
-    console.log(this.typeReport);
-    if (superUser) {
-      this.ReportService.getMyReports(this.typeReport).subscribe((Reports: any) => {
-        for (let report of Reports) {
-          report.department = JSON.parse(report.department);
-          this.Reports.push(report);
-        }
-        this.departmentName = Reports[0].department.name;
-        this.departmentIcon = Reports[0].department.icon;
-        this.departmentColor = Reports[0].department.color;
-      });
-      console.log(this.Reports)
+    if (this.CurrentUser == null) {
+      this.NavController.navigateRoot('/login');
     } else {
-      this.NavController.navigateRoot('/home');
+      if (true) {
+        this.ReportService.getMyReports(this.typeReport).subscribe((Reports: any) => {
+          for (let report of Reports) {
+            report.department = JSON.parse(report.department);
+            this.Reports.push(report);
+          }
+          this.departmentName = Reports[0].department.name;
+          this.departmentIcon = Reports[0].department.icon;
+          this.departmentColor = Reports[0].department.color;
+        });
+        console.log(this.Reports)
+      } else {
+        this.NavController.navigateRoot('/home');
+      }
     }
   }
 

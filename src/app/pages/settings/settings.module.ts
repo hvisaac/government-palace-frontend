@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { UpdateUserTypePageRoutingModule } from './update-user-type-routing.module';
+import { SettingsPageRoutingModule } from './settings-routing.module';
 
-import { UpdateUserTypePage } from './update-user-type.page';
+import { SettingsPage } from './settings.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    UpdateUserTypePageRoutingModule
+    SettingsPageRoutingModule
   ],
-  declarations: [UpdateUserTypePage]
+  declarations: [SettingsPage]
 })
-export class UpdateUserTypePageModule {}
+export class SettingsPageModule {}

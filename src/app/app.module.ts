@@ -10,15 +10,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { ReportsPerDepartmentPage } from './pages/reports-per-department/reports-per-department.page';
-import { ReportsPerDepartmentPageModule } from './pages/reports-per-department/reports-per-department.module';
 
 @NgModule({
-  entryComponents: [
-    ReportsPerDepartmentPage
-  ],
+
   declarations: [AppComponent],
-  imports: [ReportsPerDepartmentPageModule, BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ServiceWorkerModule.register('ngsw-worker.js', {
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, ServiceWorkerModule.register('ngsw-worker.js', {
   enabled: environment.production,
   // Register the ServiceWorker as soon as the application is stable
   // or after 30 seconds (whichever comes first).

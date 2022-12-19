@@ -15,36 +15,32 @@ export class ConfigService {
     return this.http.get(`${environment.api}/config/departments`);
   }
 
-  getUserTypes() {
-    return this.http.get(`${environment.api}/config/user-types`);
-  }
-
-  getUserType(id) {
-    return this.http.get(`${environment.api}/config/user-types/${id}`);
-  }
-
   getServicePhones() {
     return this.http.get(`${environment.api}/config/service-phones`);
+  }
+
+  getHierarchies() {
+    return this.http.get(`${environment.api}/hierarchy`);
   }
 
   addServicePhones(servicePhone) {
     return this.http.post(`${environment.api}/config/service-phones`, servicePhone);
   }
 
-  addDepartment(department) {
-    return this.http.post(`${environment.api}/config/add-department`, department);
+  addHierarchy(hierarchy) {
+    return this.http.post(`${environment.api}/hierarchy`, hierarchy);
   }
 
-  addUserType(userType) {
-    return this.http.post(`${environment.api}/config/add-user-type`, userType);
+  addDepartment(department) {
+    return this.http.post(`${environment.api}/config/add-department`, department);
   }
 
   deleteDepartment(id){
     return this.http.delete(`${environment.api}/config/${id}/department`);
   }
 
-  deleteUserType(id){
-    return this.http.delete(`${environment.api}/config/${id}/user-type`);
+  deleteHierarchy(id){
+    return this.http.delete(`${environment.api}/${id}/hierarchy`);
   }
 
   deleteServicePhone(id){
@@ -55,8 +51,8 @@ export class ConfigService {
     return this.http.put(`${environment.api}/config/${object.id}/department`, object);
   }
 
-  updateUserType(object){
-    return this.http.put(`${environment.api}/config/${object.id}/user-type`, object);
+  updateHierarchy(object){
+    return this.http.put(`${environment.api}/${object.id}/hierarchy`, object);
   }
 
   updateServicePhone(object){

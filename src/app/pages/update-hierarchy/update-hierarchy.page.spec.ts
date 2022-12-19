@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { UpdateUserTypePage } from './update-user-type.page';
+import { UpdateHierarchyPage } from './update-hierarchy.page';
 
-describe('UpdateUserTypePage', () => {
-  let component: UpdateUserTypePage;
-  let fixture: ComponentFixture<UpdateUserTypePage>;
+describe('UpdateHierarchyPage', () => {
+  let component: UpdateHierarchyPage;
+  let fixture: ComponentFixture<UpdateHierarchyPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ UpdateUserTypePage ],
+      declarations: [ UpdateHierarchyPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UpdateUserTypePage);
+    fixture = TestBed.createComponent(UpdateHierarchyPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

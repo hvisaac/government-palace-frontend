@@ -1,0 +1,31 @@
+<ion-header [translucent]="false">
+  <ion-toolbar style="text-align: center; font-size: 20px; width: bold;">
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div style="width: 100%; text-align: center; margin-top: 3%;">
+    <img src="https://ionicframework.com/docs/img/demos/avatar.svg"
+      style="height: 250px; width: 250px; border-radius: 100%;" />
+  </div>
+  <ion-item [disabled]="hierarchy > 0" style="margin-top: 15%;">
+    <ion-label> Usuario </ion-label>
+    <ion-input [(ngModel)]="username" placeholder="Usuario" value="{{username}}"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label> Contraseña </ion-label>
+    <ion-input type="password" [(ngModel)]="password" placeholder="Contraseña" value="{{password}}"></ion-input>
+  </ion-item>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <ion-button (click)="changeUserAndPassword(username, password)" shape="round">
+      <ion-label *ngIf="hierarchy > 0">
+        Cambiar contraseña
+      </ion-label>
+      <ion-label *ngIf="hierarchy == 0">
+        Cambiar usuario y contraseña
+      </ion-label>
+    </ion-button>
+  </div>
+</ion-content>

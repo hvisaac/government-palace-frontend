@@ -10,18 +10,28 @@ import { GlobalSettingsPage } from './global-settings.page';
 import { RegisterUserPage } from '../register-user/register-user.page';
 import { RegisterUserPageModule } from '../register-user/register-user.module';
 import { RegisterDepartmentPage } from '../register-department/register-department.page';
-import { RegisterUserTypePage } from '../register-user-type/register-user-type.page';
 import { RegisterServicePhonePage } from '../register-service-phone/register-service-phone.page';
 import { RegisterDepartmentPageModule } from '../register-department/register-department.module';
-import { RegisterUserTypePageModule } from '../register-user-type/register-user-type.module';
 import { RegisterServicePhonePageModule } from '../register-service-phone/register-service-phone.module';
+import { RegisterHierarchyPage } from '../register-hierarchy/register-hierarchy.page';
+import { RegisterHierarchyPageModule } from '../register-hierarchy/register-hierarchy.module';
+import { UpdateUserPage } from '../update-user/update-user.page';
+import { UpdateDepartmentPage } from '../update-department/update-department.page';
+import { UpdateServicePhonePage } from '../update-service-phone/update-service-phone.page';
+import { UpdateUserPageModule } from '../update-user/update-user.module';
+import { UpdateDepartmentPageModule } from '../update-department/update-department.module';
+import { UpdateServicePhonePageModule } from '../update-service-phone/update-service-phone.module';
+import { UpdateHierarchyPageModule } from '../update-hierarchy/update-hierarchy.module';
 
 @NgModule({
   entryComponents: [
     RegisterUserPage,
     RegisterDepartmentPage,
-    RegisterUserTypePage,
-    RegisterServicePhonePage
+    RegisterServicePhonePage,
+    RegisterHierarchyPage,
+    UpdateUserPage,
+    UpdateDepartmentPage,
+    UpdateServicePhonePage
   ],
   imports: [
     CommonModule,
@@ -30,8 +40,12 @@ import { RegisterServicePhonePageModule } from '../register-service-phone/regist
     GlobalSettingsPageRoutingModule,
     RegisterUserPageModule,
     RegisterDepartmentPageModule,
-    RegisterUserTypePageModule,
-    RegisterServicePhonePageModule
+    RegisterServicePhonePageModule,
+    RegisterHierarchyPageModule,
+    UpdateUserPageModule,
+    UpdateDepartmentPageModule,
+    UpdateServicePhonePageModule,
+    UpdateHierarchyPageModule
   ],
   declarations: [GlobalSettingsPage]
 })

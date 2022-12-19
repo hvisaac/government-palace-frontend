@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class RegisterUserPage implements OnInit {
   departments: any[];
-  roles: any[];
+  hierarchies: any[];
 
   @Input()
   phone: string;
@@ -25,10 +25,22 @@ export class RegisterUserPage implements OnInit {
   lastname: string;
 
   @Input()
-  department: string
+  department: string;
 
   @Input()
-  role: string
+  role: string;
+
+  @Input()
+  hierarchy: string;
+
+  @Input()
+  waitingStatus: boolean;
+
+  @Input()
+  workingStatus: boolean
+  
+  @Input()
+  finishStatus: boolean
 
   constructor(
     private AuthService: AuthService,
@@ -39,11 +51,9 @@ export class RegisterUserPage implements OnInit {
   ngOnInit() {
     this.configService.getDepartments().subscribe((data: any) => {
       this.departments = data;
-      console.log(this.departments)
     });
-    this.configService.getUserTypes().subscribe((data: any) => {
-      this.roles = data;
-      console.log(this.roles)
+    this.configService.getHierarchies().subscribe((data: any) => {
+      this.hierarchies = data;
     });
   }
 
@@ -53,23 +63,32 @@ export class RegisterUserPage implements OnInit {
       password: string,
       name: string,
       lastname: string,
-      department: string, 
-      role: string
+      department: string,
+      waitingStatus: boolean,
+      workingStatus: boolean,
+      finishStatus: boolean,
+      hierarchy: string,
     ) {
-    this.AuthService.SignUp
-      (
-        phone,
-        password,
-        name,
-        lastname,
-        department,
-        role,
-      )
-      .subscribe(response => this.modalController.dismiss({response}));
+
+    let request = {
+      phone: phone,
+      password: password,
+      name: name,
+      lastname: lastname,
+      urlPhoto: '',
+      department: department,
+      permissions: {
+        waitingStatus: waitingStatus,
+        workingStatus: workingStatus,
+        finishStatus: finishStatus,
+      },
+      hierarchy: hierarchy,
+    }
+    this.AuthService.SignUp(request).subscribe(response => this.modalController.dismiss({ response: 'success' }));
   }
 
-  dismiss(){
-    this.modalController.dismiss({response: 'exit'});
+  dismiss() {
+    this.modalController.dismiss({ response: 'exit' });
   }
 
 }

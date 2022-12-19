@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "short_name": "app",
+  "name": "Adminstración de reportes",
+  "short_name": "Adminstración de reportes",
   "theme_color": "#B22241",
   "background_color": "#B22241",
   "display": "standalone",

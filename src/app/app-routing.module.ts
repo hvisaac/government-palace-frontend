@@ -3,17 +3,17 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
-  },
-  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
     path: 'register-user',
@@ -56,10 +56,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/register-department/register-department.module').then( m => m.RegisterDepartmentPageModule)
   },
   {
-    path: 'register-user-type',
-    loadChildren: () => import('./pages/register-user-type/register-user-type.module').then( m => m.RegisterUserTypePageModule)
-  },
-  {
     path: 'register-service-phone',
     loadChildren: () => import('./pages/register-service-phone/register-service-phone.module').then( m => m.RegisterServicePhonePageModule)
   },
@@ -76,12 +72,20 @@ const routes: Routes = [
     loadChildren: () => import('./pages/update-service-phone/update-service-phone.module').then( m => m.UpdateServicePhonePageModule)
   },
   {
-    path: 'update-user-type',
-    loadChildren: () => import('./pages/update-user-type/update-user-type.module').then( m => m.UpdateUserTypePageModule)
-  },
-  {
     path: 'update-user',
     loadChildren: () => import('./pages/update-user/update-user.module').then( m => m.UpdateUserPageModule)
+  },
+  {
+    path: 'register-hierarchy',
+    loadChildren: () => import('./pages/register-hierarchy/register-hierarchy.module').then( m => m.RegisterHierarchyPageModule)
+  },
+  {
+    path: 'update-hierarchy',
+    loadChildren: () => import('./pages/update-hierarchy/update-hierarchy.module').then( m => m.UpdateHierarchyPageModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
   },
 ];
 

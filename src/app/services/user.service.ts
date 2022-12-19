@@ -24,4 +24,8 @@ export class UserService {
   updateUser(object){
     return this.http.put(`${environment.api}/users/${object.id}/user`, object);
   }
+
+  changeUserAndPassword(object){
+    return this.http.put(`${environment.api}/users/${object.id}/user-and-password`, object);
+  }
 }

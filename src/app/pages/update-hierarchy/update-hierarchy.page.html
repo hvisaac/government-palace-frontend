@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="header">
+    <h1>Crear un <br> nuevo teléfono de servicio</h1>
+  </div>
+
+  <div class="form">
+    <ion-input placeholder="Nombre" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Nivel" type="number" [(ngModel)]="level" #ctrl="ngModel"></ion-input>
+    <!-- <ion-input placeholder="Color" [(ngModel)]="color" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Icono" [(ngModel)]="icon" #ctrl="ngModel"></ion-input> -->
+  </div>
+
+  <!-- <div class="button" (click)="addServicePhone(name, number, color, icon)">
+    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div> -->
+
+  <div class="button" (click)="updateHierarchy(name, level)">
+    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
+  </div>
+
+</ion-content>

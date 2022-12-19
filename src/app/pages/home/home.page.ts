@@ -46,10 +46,6 @@ export class HomePage {
     } else {
       this.menuController.enable(true);
       let superUser = false;
-      this.configService.getUserType(this.CurrentUser[0].role).subscribe((role: any) => {
-        superUser = role[0].superUser;
-        console.log(role)
-      })
       this.configService.getDepartments().subscribe((departments: any[]) => {
         this.departments = departments;
         for (const department of departments) {

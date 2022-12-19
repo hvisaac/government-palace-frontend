@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginPage implements OnInit {
 
   @Input()
-  phone: string;
+  name: string;
 
   @Input()
   password: string;
@@ -25,6 +25,7 @@ export class LoginPage implements OnInit {
     ) { }
 
   ngOnInit() {
+    console.log('llega');
     let CurrentUser = JSON.parse(sessionStorage.getItem('user'));
     console.log(CurrentUser);
     if (CurrentUser != null) {
@@ -35,13 +36,11 @@ export class LoginPage implements OnInit {
     this.MenuController.enable(false);
   }
 
-  async SignIn(phone: string, password: string) {
-    this.AuthService.SignIn(phone, password).subscribe((data: any) => {
+  async SignIn(name: string, password: string) {
+    this.AuthService.SignIn(name, password).subscribe((data: any) => {
       if (data.length > 0) {
+        data[0].hierarchy = JSON.parse(data[0].hierarchy);
         sessionStorage.setItem('user', JSON.stringify(data));
-        this.configService.getUserType(data[0].role).subscribe((role) => {
-          sessionStorage.setItem('permissions', JSON.stringify(role));
-        });
         this.NavController.navigateRoot('/home');
       } else {
         console.log("user not found");

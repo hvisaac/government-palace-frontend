@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
+import { ConfigService } from '../../services/config.service';
 import iro from '@jaames/iro';
 
 @Component({
@@ -17,23 +18,33 @@ export class RegisterDepartmentPage implements OnInit {
 
   @Input()
   icon: string;
+
+  @Input()
+  reports: string;
   
   constructor(
     private modalController: ModalController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
     let colorPicker = iro.ColorPicker('#colorPicker', {width:320,color:'#ffff'})
 
     colorPicker.on('color:change', (colorPicked) => {
-      console.log(colorPicked)
       this.color = colorPicked.hexString
     })
   }
 
-  addDepartment(name, color, icon) {
+  addDepartment(name, color, icon, reports) {
+    let department = {
+      name: name,
+      color: color,
+      icon: icon,
+      reports: reports
+    }
 
+    this.configService.addDepartment(department).subscribe(response => this.modalController.dismiss({response: 'success'}));
   }
 
   dismiss(){
