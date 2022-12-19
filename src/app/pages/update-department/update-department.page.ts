@@ -23,7 +23,7 @@ export class UpdateDepartmentPage implements OnInit {
   icon: string;
 
   @Input()
-  reports: string;
+  info: string;
   
   constructor(
     private modalController: ModalController,
@@ -39,13 +39,13 @@ export class UpdateDepartmentPage implements OnInit {
     })
   }
 
-  updateDepartment(name, color, icon, reports) {
+  updateDepartment(name, color, icon, info) {
     let department = {
       id: this.id,
       name: name,
       color: color,
       icon: icon,
-      reports: reports
+      info: info
     }
 
     this.configService.updateDepartment(department).subscribe(response => this.modalController.dismiss({response: 'success'}));

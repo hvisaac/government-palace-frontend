@@ -20,7 +20,7 @@ export class RegisterDepartmentPage implements OnInit {
   icon: string;
 
   @Input()
-  reports: string;
+  info: string;
   
   constructor(
     private modalController: ModalController,
@@ -36,12 +36,12 @@ export class RegisterDepartmentPage implements OnInit {
     })
   }
 
-  addDepartment(name, color, icon, reports) {
+  addDepartment(name, color, icon, info) {
     let department = {
       name: name,
       color: color,
       icon: icon,
-      reports: reports
+      info: info
     }
 
     this.configService.addDepartment(department).subscribe(response => this.modalController.dismiss({response: 'success'}));

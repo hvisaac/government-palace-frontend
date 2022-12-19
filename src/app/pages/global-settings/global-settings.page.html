@@ -75,7 +75,7 @@
             <ion-icon slot="start" name="{{department.icon}}" style="color: {{department.color}};"></ion-icon>
             <ion-label>{{department.name}}</ion-label>
           </ion-item>
-          <ion-item-options side="end" (click)="updateDepartment(department._id, department.name, department.color, department.icon)">
+          <ion-item-options side="end" (click)="updateDepartment(department._id, department.name, department.color, department.icon, department.info)">
             <ion-item-option>
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-item-option>

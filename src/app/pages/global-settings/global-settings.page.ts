@@ -188,14 +188,15 @@ export class GlobalSettingsPage implements OnInit {
     }
   }
 
-  async updateDepartment(id, name, color, icon) {
+  async updateDepartment(id, name, color, icon, info) {
     const modal = await this.modalController.create({
       component: UpdateDepartmentPage,
       componentProps: {
         id: id, 
         name: name, 
         color: color, 
-        icon: icon
+        icon: icon,
+        info: info
       }
     });
 
