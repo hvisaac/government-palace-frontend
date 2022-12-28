@@ -17,11 +17,11 @@
     <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" #ctrl="ngModel"></ion-input>
     <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="hierarchy" placeholder="Nivel">
       <ion-list *ngFor="let hierarchy of hierarchies">
-        <ion-select-option *ngIf="hierarchy.name != 'admin'"
+        <ion-select-option *ngIf="hierarchy.level > 0"
           value="{{hierarchy._id}}">{{hierarchy.name}}</ion-select-option>
       </ion-list>
     </ion-select>
-    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="department" placeholder="Departamento">
+    <ion-select multiple="true" style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="userDepartments" placeholder="Departamento">
       <ion-list *ngFor="let department of departments">
         <ion-select-option value="{{department._id}}">{{department.name}}</ion-select-option>
       </ion-list>
@@ -43,7 +43,7 @@
   </div>
 
   <div class="button"
-    (click)="SignUp(phone, password, name, lastname, department, waitingStatus, workingStatus, finishStatus, hierarchy)">
+    (click)="SignUp(phone, password, name, lastname, userDepartments, waitingStatus, workingStatus, finishStatus, hierarchy)">
     Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
   </div>
 

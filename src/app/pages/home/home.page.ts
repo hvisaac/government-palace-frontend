@@ -17,7 +17,7 @@ import { ReportsPerDepartmentPage } from '../reports-per-department/reports-per-
 })
 export class HomePage {
 
-  CurrentUser: UserInterface;
+  CurrentUser: any;
   @ViewChild('doughnutCanvas') private doughnutCanvas: ElementRef;
   barChart: any;
   doughnutChart: any;
@@ -40,13 +40,12 @@ export class HomePage {
   ngOnInit() {
     this.menuController.enable(false);
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
-    console.log(this.CurrentUser);
     if (this.CurrentUser == null) {
       this.navController.navigateRoot('/login');
     } else {
       this.menuController.enable(true);
-      let superUser = false;
       this.configService.getDepartments().subscribe((departments: any[]) => {
+        console.log(departments)
         this.departments = departments;
         for (const department of departments) {
           this.departmentsNames.push(department.name);
@@ -58,10 +57,10 @@ export class HomePage {
       });
 
       setTimeout(() => {
-        if (superUser) {
+        if (this.CurrentUser.hierarchy.level == 0) {
           this.doughnutChartMethod();
         } else {
-          this.doughnutChartMethodDepartment(this.CurrentUser[0].department);
+          this.doughnutChartMethodDepartment(this.CurrentUser.department);
         }
       }, 1500);
     }
@@ -122,7 +121,6 @@ export class HomePage {
       },
       options: {
         onClick: () => {
-          console.log(department)
           this.openReports(department);
         },
         plugins: {

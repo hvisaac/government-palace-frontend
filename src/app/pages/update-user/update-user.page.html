@@ -23,7 +23,7 @@
     <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="roleSelect"
     placeholder="Rol">
     <ion-list *ngFor="let role of roles">
-      <ion-select-option *ngIf="role.name != 'admin'" value="{{role._id}}">{{role.name}}</ion-select-option>
+      <ion-select-option *ngIf="role.level > 0" value="{{role._id}}">{{role.name}}</ion-select-option>
     </ion-list>
   </ion-select>
   </div>

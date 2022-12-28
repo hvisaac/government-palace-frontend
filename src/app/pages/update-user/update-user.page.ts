@@ -45,14 +45,18 @@ export class UpdateUserPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('department -> ' + this.department)
+    console.log('role -> ' + this.role)
     this.configService.getDepartments().subscribe((data: any) => {
       this.departments = data;
-      console.log(this.departments)
+    });
+    this.configService.getHierarchies().subscribe((data: any) => {
+      this.roles = data;
     });
     setTimeout(() => {
       this.departmentSelect = this.department;
       this.roleSelect = this.role;
-    }, 300);
+    }, 1000);
 
   }
 

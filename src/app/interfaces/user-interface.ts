@@ -6,5 +6,8 @@ export interface UserInterface {
     lastname: string,
     urlPhoto: string,
     type: number,
-    hierarchy: number
+    hierarchy: {
+        name: String,
+        level: number
+    }
 }

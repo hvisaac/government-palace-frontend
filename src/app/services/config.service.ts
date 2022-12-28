@@ -20,7 +20,7 @@ export class ConfigService {
   }
 
   getHierarchies() {
-    return this.http.get(`${environment.api}/hierarchy`);
+    return this.http.get(`${environment.api}/hierarchies`);
   }
 
   addServicePhones(servicePhone) {
@@ -32,7 +32,7 @@ export class ConfigService {
   }
 
   addDepartment(department) {
-    return this.http.post(`${environment.api}/config/add-department`, department);
+    return this.http.post(`${environment.api}/config/department`, department);
   }
 
   deleteDepartment(id){

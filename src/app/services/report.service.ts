@@ -38,7 +38,6 @@ export class ReportService {
   }
 
   countAllReports() {
-    console.log(`${environment.api}/my-reports/count-all-reports`)
     return this.http.get(`${environment.api}/my-reports/count-all-reports`);
   }
 

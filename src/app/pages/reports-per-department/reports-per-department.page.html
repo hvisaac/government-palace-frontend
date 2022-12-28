@@ -34,7 +34,7 @@
                   </ion-text>
                 </ion-item>
                 <ion-buttons>
-                  <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openMap()">
+                  <ion-button fill="clear" style="margin-top: 15px;" color="dark" (click)="openMap(report.geolocation.latitude, report.geolocation.longitude)">
                     <ion-icon slot="end" name="location-sharp"></ion-icon>
                     <ion-label> Ver mapa </ion-label>
                   </ion-button>

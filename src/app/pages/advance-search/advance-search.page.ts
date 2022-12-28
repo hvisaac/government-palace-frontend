@@ -16,7 +16,7 @@ export class AdvanceSearchPage implements OnInit {
   finalDate: Date;
   content: string;
 
-  CurrentUser: UserInterface;
+  CurrentUser: any;
   Reports: any[] = [];
 
   constructor(

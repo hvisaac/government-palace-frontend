@@ -25,7 +25,7 @@ export class RegisterUserPage implements OnInit {
   lastname: string;
 
   @Input()
-  department: string;
+  userDepartments: string[];
 
   @Input()
   role: string;
@@ -63,7 +63,7 @@ export class RegisterUserPage implements OnInit {
       password: string,
       name: string,
       lastname: string,
-      department: string,
+      departments: String[],
       waitingStatus: boolean,
       workingStatus: boolean,
       finishStatus: boolean,
@@ -76,7 +76,7 @@ export class RegisterUserPage implements OnInit {
       name: name,
       lastname: lastname,
       urlPhoto: '',
-      department: department,
+      departments: departments,
       permissions: {
         waitingStatus: waitingStatus,
         workingStatus: workingStatus,
@@ -84,6 +84,7 @@ export class RegisterUserPage implements OnInit {
       },
       hierarchy: hierarchy,
     }
+    console.log(request)
     this.AuthService.SignUp(request).subscribe(response => this.modalController.dismiss({ response: 'success' }));
   }
 

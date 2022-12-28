@@ -11,7 +11,7 @@ import { ConfigService } from 'src/app/services/config.service';
 })
 export class AnalitycsPage implements OnInit {
 
-  CurrentUser: UserInterface;
+  CurrentUser: any;
   @ViewChild('barCanvas') private barCanvas: ElementRef;
   @ViewChild('pointCanvas') private pointCanvas: ElementRef;
   barChart: any;
@@ -33,7 +33,6 @@ export class AnalitycsPage implements OnInit {
   ngOnInit() {
     this.menuController.enable(false);
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
-    console.log(this.CurrentUser);
     if (this.CurrentUser == null) {
       this.navController.navigateRoot('/login');
     } else {

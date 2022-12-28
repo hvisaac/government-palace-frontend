@@ -47,6 +47,8 @@ export class ReportsPerDepartmentPage implements OnInit {
     } else {
       if (true) {
         this.ReportService.getMyReports(this.typeReport).subscribe((Reports: any) => {
+          console.log('reports -> ' + Reports);
+          console.log('department => ' + this.typeReport);
           for (let report of Reports) {
             report.department = JSON.parse(report.department);
             this.Reports.push(report);
@@ -55,7 +57,6 @@ export class ReportsPerDepartmentPage implements OnInit {
           this.departmentIcon = Reports[0].department.icon;
           this.departmentColor = Reports[0].department.color;
         });
-        console.log(this.Reports)
       } else {
         this.NavController.navigateRoot('/home');
       }
@@ -72,13 +73,12 @@ export class ReportsPerDepartmentPage implements OnInit {
       this.MapService.initOSMWithDescription(this.Reports[i].geolocation.latitude, this.Reports[i].geolocation.longitude, 'map' + i);
     }
   }
-  async openMap() {
-    let coordinates = await Geolocation.getCurrentPosition();
+  async openMap(latitude, longitude) {
     const modal = await this.modalController.create({
       component: MapPage,
       componentProps: {
-        Latitude: coordinates.coords.latitude,
-        Longitude: coordinates.coords.longitude,
+        Latitude: latitude,
+        Longitude: longitude,
       }
     });
 
@@ -99,8 +99,7 @@ export class ReportsPerDepartmentPage implements OnInit {
   }
 
   async presentAlert(id, status, folio, icon) {
-    const permissions = JSON.parse(sessionStorage.getItem('permissions'))
-    if (permissions[0].canCreate) {
+    if (this.CurrentUser[0].permissions.workingStatus) {
       const alert = await this.alertController.create({
         header: 'Alerta',
         subHeader: 'Cambio de estado de reporte',
@@ -126,8 +125,7 @@ export class ReportsPerDepartmentPage implements OnInit {
   }
 
   async openFinishReport(id, folio, icon) {
-    const permissions = JSON.parse(sessionStorage.getItem('permissions'))
-    if (permissions[0].canEdit) {
+    if (this.CurrentUser[0].permissions.finishStatus) {
       const modal = await this.modalController.create({
         component: FinishReportPage,
         componentProps: {

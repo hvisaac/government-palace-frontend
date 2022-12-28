@@ -26,8 +26,8 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    console.log('entra');
 
+    
     this.configService.getDepartments().subscribe((data: any) => {
       this.Departments = data;
     });
@@ -40,13 +40,14 @@ export class AppComponent {
 
   async openSettings(){
     const currentUser = JSON.parse(sessionStorage.getItem('user'));
+    console.log(currentUser)
     const modal = await this.modalController.create({
       component: SettingsPage,
       componentProps: {
-        id: currentUser[0]._id,
-        username: currentUser[0].name,
-        password: currentUser[0].password,
-        hierarchy: currentUser[0].hierarchy.level
+        id: currentUser.id,
+        username: currentUser.data.name,
+        password: currentUser.data.password,
+        hierarchy: currentUser.data.hierarchy.level
       }
     });
 

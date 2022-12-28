@@ -13,7 +13,7 @@ import { MapPage } from '../map/map.page';
 })
 export class AllReportsPage implements OnInit {
 
-  CurrentUser: UserInterface;
+  CurrentUser: any;
   Reports: any[] = [];
 
   constructor
@@ -102,7 +102,7 @@ export class AllReportsPage implements OnInit {
           }
         });
       } else {
-        this.ReportService.getMyReports(this.CurrentUser[0].department).subscribe((reports: any[]) => {
+        this.ReportService.getMyReports(this.CurrentUser.department).subscribe((reports: any[]) => {
           console.log('entra')
           for (const report of reports) {
             report.department = JSON.parse(report.department);

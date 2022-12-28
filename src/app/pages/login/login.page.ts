@@ -39,8 +39,9 @@ export class LoginPage implements OnInit {
   async SignIn(name: string, password: string) {
     this.AuthService.SignIn(name, password).subscribe((data: any) => {
       if (data.length > 0) {
+        console.log(data)
         data[0].hierarchy = JSON.parse(data[0].hierarchy);
-        sessionStorage.setItem('user', JSON.stringify(data));
+        sessionStorage.setItem('user', JSON.stringify(data[0]));
         this.NavController.navigateRoot('/home');
       } else {
         console.log("user not found");

@@ -43,13 +43,13 @@ export class SettingsPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  changeUserAndPassword(username, password){
+  changeUserAndPassword(name, password){
     let user = {
       id: this.id,
-      username,
+      name,
       password
     }
-    this.userService.changeUserAndPassword(user).subscribe(data => {
+    this.userService.updateUser(user).subscribe(data => {
       if(data) {
         this.logout()
       }

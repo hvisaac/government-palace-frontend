@@ -18,7 +18,7 @@ import { UpdateUserPage } from '../update-user/update-user.page';
   styleUrls: ['./global-settings.page.scss'],
 })
 export class GlobalSettingsPage implements OnInit {
-  CurrentUser: UserInterface;
+  CurrentUser: any;
   option: number;
   departments: any[] = [];
   users: any[] = [];
@@ -42,6 +42,7 @@ export class GlobalSettingsPage implements OnInit {
       this.navController.navigateRoot('/login');
     } else {
       this.menuController.enable(true);
+      console.log(this.CurrentUser)
       this.configService.getDepartments().subscribe((data: any) => {
         this.departments = data;
       });
@@ -50,6 +51,7 @@ export class GlobalSettingsPage implements OnInit {
           user.hierarchy = JSON.parse(user.hierarchy);
           this.users.push(user);
         }
+        console.log(this.users)
       });
       this.configService.getServicePhones().subscribe((data: any) => {
         this.servicePhones = data;
@@ -84,7 +86,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -99,10 +100,9 @@ export class GlobalSettingsPage implements OnInit {
 
     await modal.present();
 
-    
+
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -119,7 +119,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -136,7 +135,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -158,7 +156,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -180,7 +177,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -192,9 +188,9 @@ export class GlobalSettingsPage implements OnInit {
     const modal = await this.modalController.create({
       component: UpdateDepartmentPage,
       componentProps: {
-        id: id, 
-        name: name, 
-        color: color, 
+        id: id,
+        name: name,
+        color: color,
         icon: icon,
         info: info
       }
@@ -204,7 +200,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -230,7 +225,6 @@ export class GlobalSettingsPage implements OnInit {
 
     const data: any = await modal.onDidDismiss();
 
-    console.log(data.data.response);
 
     if (data.data.response == 'success') {
       this.doRefresh();
@@ -238,24 +232,32 @@ export class GlobalSettingsPage implements OnInit {
     }
   }
 
-  deleteServicePhone(id){
-    this.configService.deleteServicePhone(id).subscribe(Response => console.log(Response));
-    this.doRefresh();
+  deleteServicePhone(id) {
+    this.configService.deleteServicePhone(id).subscribe(response => {
+      console.log(response)
+      this.doRefresh();
+    });
   }
 
-  deleteHierarchy(id){
-    this.configService.deleteHierarchy(id).subscribe(Response => console.log(Response));
-    this.doRefresh();
+  deleteHierarchy(id) {
+    this.configService.deleteHierarchy(id).subscribe(response => {
+      console.log(response)
+      this.doRefresh();
+    });
   }
 
-  deleteDepartment(id){
-    this.configService.deleteDepartment(id).subscribe(Response => console.log(Response));
-    this.doRefresh();
+  deleteDepartment(id) {
+    this.configService.deleteDepartment(id).subscribe(response => {
+      console.log(response)
+      this.doRefresh();
+    });
   }
 
-  deleteUser(id){
-    this.userService.deleteUser(id).subscribe(Response => console.log(Response));
-    this.doRefresh();
+  deleteUser(id) {
+    this.userService.deleteUser(id).subscribe(response => {
+      console.log(response)
+      this.doRefresh();
+    });
   }
 
   doRefresh() {
