@@ -10,3 +10,7 @@ ion-toolbar{
 ion-list{
     background: #B22241;
 }
+
+ion-skeleton-text {
+    --border-radius: 9999px;
+}

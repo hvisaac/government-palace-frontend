@@ -11,23 +11,20 @@
   </div>
 
   <div class="form">
-    <ion-button color="dark"  shape="round" style="margin-top: 15px;" (click)="shootPhoto()">
-      <ion-icon slot="start" name="camera"></ion-icon>
-      <ion-label> Tomar foto </ion-label>
-    </ion-button>
-    <div class="photo">
-      <ion-img src="{{photo}}"></ion-img>
-    </div>
-    <ion-textarea style="margin-top: 15px;" placeholder="Comentarios..." [(ngModel)]="description" #ctrl="ngModel"></ion-textarea>
-    <!-- <ion-input placeholder="Color" [(ngModel)]="color" #ctrl="ngModel"></ion-input>
-    <ion-input placeholder="Icono" [(ngModel)]="icon" #ctrl="ngModel"></ion-input> -->
+
+    <ion-card mode="ios">
+      <ion-img alt="reported photo" src={{photoPreview}}></ion-img>
+
+      <ion-card-content>
+        <ion-textarea style="margin-top: 15px; background: #f6f5f5; color: #000000" placeholder="Comentarios..." [(ngModel)]="finishDescription" #ctrl="ngModel"></ion-textarea>
+      </ion-card-content>
+
+      <ion-button (click)="shootPhoto()" fill="clear">Tomar foto</ion-button>
+    </ion-card>
+
   </div>
 
-  <!-- <div class="button" (click)="addServicePhone(name, number, color, icon)">
-    Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
-  </div> -->
-
-  <div class="buttonAdd" (click)="finishReport(description, photo)">
+  <div class="buttonAdd" (click)="finishReport(finishDescription, photo)">
     Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
   </div>
 

@@ -22,6 +22,10 @@ import { UpdateUserPageModule } from '../update-user/update-user.module';
 import { UpdateDepartmentPageModule } from '../update-department/update-department.module';
 import { UpdateServicePhonePageModule } from '../update-service-phone/update-service-phone.module';
 import { UpdateHierarchyPageModule } from '../update-hierarchy/update-hierarchy.module';
+import { UpdateSecretariatPage } from '../update-secretariat/update-secretariat.page';
+import { RegisterSecretariatPage } from '../register-secretariat/register-secretariat.page';
+import { UpdateSecretariatPageModule } from '../update-secretariat/update-secretariat.module';
+import { RegisterSecretariatPageModule } from '../register-secretariat/register-secretariat.module';
 
 @NgModule({
   entryComponents: [
@@ -29,9 +33,11 @@ import { UpdateHierarchyPageModule } from '../update-hierarchy/update-hierarchy.
     RegisterDepartmentPage,
     RegisterServicePhonePage,
     RegisterHierarchyPage,
+    RegisterSecretariatPage,
     UpdateUserPage,
     UpdateDepartmentPage,
-    UpdateServicePhonePage
+    UpdateServicePhonePage,
+    UpdateSecretariatPage
   ],
   imports: [
     CommonModule,
@@ -42,10 +48,12 @@ import { UpdateHierarchyPageModule } from '../update-hierarchy/update-hierarchy.
     RegisterDepartmentPageModule,
     RegisterServicePhonePageModule,
     RegisterHierarchyPageModule,
+    RegisterSecretariatPageModule,
     UpdateUserPageModule,
     UpdateDepartmentPageModule,
     UpdateServicePhonePageModule,
-    UpdateHierarchyPageModule
+    UpdateHierarchyPageModule,
+    UpdateSecretariatPageModule
   ],
   declarations: [GlobalSettingsPage]
 })

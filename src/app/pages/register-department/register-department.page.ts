@@ -10,6 +10,8 @@ import iro from '@jaames/iro';
 })
 export class RegisterDepartmentPage implements OnInit {
 
+  secretariats: any[];
+
   @Input()
   name: string;
 
@@ -21,6 +23,9 @@ export class RegisterDepartmentPage implements OnInit {
 
   @Input()
   info: string;
+
+  @Input()
+  secretariat: string;
   
   constructor(
     private modalController: ModalController,
@@ -34,6 +39,10 @@ export class RegisterDepartmentPage implements OnInit {
     colorPicker.on('color:change', (colorPicked) => {
       this.color = colorPicked.hexString
     })
+
+    this.configService.getSecretariats().subscribe((secretariats: any) => {
+      this.secretariats = secretariats;
+    });
   }
 
   addDepartment(name, color, icon, info) {
@@ -41,7 +50,8 @@ export class RegisterDepartmentPage implements OnInit {
       name: name,
       color: color,
       icon: icon,
-      info: info
+      info: info,
+      secretariat: this.secretariat
     }
 
     this.configService.addDepartment(department).subscribe(response => this.modalController.dismiss({response: 'success'}));

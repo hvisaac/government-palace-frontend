@@ -39,9 +39,6 @@ export class MapService {
   }
 
   async initOSMWithDescription(latitude: number, longitude: number, target: string) {
-    console.log(latitude);
-    console.log(longitude);
-    console.log(target);
 
     let map: L.Map;
 

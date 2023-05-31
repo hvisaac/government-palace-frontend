@@ -1,12 +1,20 @@
-ion-content{
+ion-content {
     --background: #B22241;
 }
 
-ion-toolbar{
-    --background: #f6f5f5;
+ion-header {
+    ion-toolbar {
+        --background: #f6f5f5;
+    }
 }
 
 ion-back-button {
     display: block;
     color: #B22241;
- }
+}
+
+ion-skeleton-text {
+    --border-radius: 9999px;
+    --background: rgba(7, 146, 93, 0.065);
+    --background-rgb: 0, 0, 0;
+}

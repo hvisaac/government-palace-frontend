@@ -11,8 +11,67 @@ export class ConfigService {
     private http: HttpClient,
   ) { }
 
+  enableDepartment(id) {
+    let request = {
+      available: true
+    }
+    return this.http.put(`${environment.api}/config/${id}/department`, request);
+  }
+  disableDepartment(id) {
+    let request = {
+      available: false
+    }
+    return this.http.put(`${environment.api}/config/${id}/department`, request);
+  }
+  switchSecretariat(id, available) {
+    let request = {
+      available: available
+    }
+
+    return this.http.put(`${environment.api}/config/${id}/switch-secretariat`, request);
+  }
+  enableSecretariat(id) {
+    let request = {
+      available: true
+    }
+    return this.http.put(`${environment.api}/config/${id}/secretariat`, request);
+  }
+  disableSecretariat(id) {
+    let request = {
+      available: false
+    }
+    return this.http.put(`${environment.api}/config/${id}/secretariat`, request);
+  }
+  enableServicePhone(id) {
+    let request = {
+      available: true
+    }
+    return this.http.put(`${environment.api}/config/${id}/service-phone`, request);
+  }
+  disableServicePhone(id) {
+    let request = {
+      available: false
+    }
+    return this.http.put(`${environment.api}/config/${id}/service-phone`, request);
+  }
+  enableHierarchy(id) {
+    let request = {
+      available: true
+    }
+    return this.http.put(`${environment.api}/${id}/hierarchy`, request);
+  }
+  disableHierarchy(id) {
+    let request = {
+      available: false
+    }
+    return this.http.put(`${environment.api}/${id}/hierarchy`, request);
+  }
   getDepartments() {
     return this.http.get(`${environment.api}/config/departments`);
+  }
+
+  getSecretariats() {
+    return this.http.get(`${environment.api}/config/secretariats`);
   }
 
   getServicePhones() {
@@ -25,6 +84,10 @@ export class ConfigService {
 
   addServicePhones(servicePhone) {
     return this.http.post(`${environment.api}/config/service-phones`, servicePhone);
+  }
+
+  addSecretariat(secretariat) {
+    return this.http.post(`${environment.api}/config/secretariat`, secretariat);
   }
 
   addHierarchy(hierarchy) {
@@ -49,6 +112,10 @@ export class ConfigService {
 
   updateDepartment(object){
     return this.http.put(`${environment.api}/config/${object.id}/department`, object);
+  }
+
+  updateSecretariat(object){
+    return this.http.put(`${environment.api}/config/${object.id}/secretariat`, object);
   }
 
   updateHierarchy(object){

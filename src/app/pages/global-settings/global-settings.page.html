@@ -8,142 +8,419 @@
     </ion-chip>
     <ion-img slot="end" src="assets/mascot/Idle.gif" style="height: 120PX; width: 120PX; margin: auto;"></ion-img>
   </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <ion-segment (ionChange)="segmentChange($event)" [(ngModel)]="option" [scrollable]="true">
+  <ion-segment (ionChange)="segmentChange($event)" [(ngModel)]="option" [scrollable]="true"
+    style="background: #f6f5f5;">
     <ion-segment-button value=1>
-      <ion-icon name="person"></ion-icon>
+      <ion-icon style="color: #7c1734;" name="person"></ion-icon>
     </ion-segment-button>
     <ion-segment-button value=2 *ngIf="CurrentUser.hierarchy.level < 1">
-      <ion-icon name="people"></ion-icon>
+      <ion-icon style="color: #7c1734;" name="people"></ion-icon>
     </ion-segment-button>
     <ion-segment-button value=3 *ngIf="CurrentUser.hierarchy.level < 1">
-      <ion-icon name="call"></ion-icon>
+      <ion-icon style="color: #7c1734;" name="call"></ion-icon>
     </ion-segment-button>
     <ion-segment-button value=4 *ngIf="CurrentUser.hierarchy.level < 1">
-      <ion-icon name="briefcase"></ion-icon>
+      <ion-icon style="color: #7c1734;" name="briefcase"></ion-icon>
     </ion-segment-button>
   </ion-segment>
+</ion-header>
 
+
+<ion-content [fullscreen]="true">
   <div [ngSwitch]="option">
+    <div *ngSwitchCase="1">
+      <div *ngIf="firstSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
 
-    <div *ngSwitchCase="1" style="--background: rgb(32, 32, 32);">
-      <ion-list *ngFor="let department of departments">
-        <ion-item-group>
-          <ion-item-divider>
-            <ion-item>
-              <ion-icon slot="start" name="{{department.icon}}" style="color: {{department.color}};"></ion-icon>
-              <ion-label>{{department.name}}</ion-label>
-            </ion-item>
-          </ion-item-divider>
-
-          <div *ngFor="let user of users">
-            <div *ngFor="let userDepartment of user.departments">
-              <ion-item-sliding
-                *ngIf="userDepartment == department._id && user.hierarchy.level > CurrentUser.hierarchy.level">
-                <ion-item>
+          <ion-item-group>
+            <ion-item-divider style="background: #7c1734; color: #f6f5f5;">
+              <ion-item style="--background: #7c1734; color: #f6f5f5;">
+                <ion-label>
+                  Super usuarios
+                </ion-label>
+              </ion-item>
+            </ion-item-divider>
+            <div class="mainList" *ngFor="let user of superUsers">
+              <ion-item-sliding *ngIf="CurrentUser.hierarchy.level < 2">
+                <ion-item disabled="{{!user.available}}" style="background: #7c1734; color: #f6f5f5;">
                   <ion-avatar slot="start">
                     <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
                   </ion-avatar>
                   <ion-label>{{user.name}} {{user.lastname}}</ion-label>
                 </ion-item>
+                <ion-item-options side="start">
+                  <ion-item-option color="secondary" (click)="ringUser(user.phone)">
+                    <ion-icon slot="icon-only" name="call"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
                 <ion-item-options side="end">
-                  <ion-item-option
-                    (click)="updateUser(user._id, user.name, user.lastname, user.phone, user.password, user.hierarchy._id, user.department)">
+                  <ion-item-option (click)="updateUser(user)">
                     <ion-icon slot="icon-only" name="create"></ion-icon>
                   </ion-item-option>
-                  <ion-item-option (click)="deleteUser(user._id)" color="danger">
-                    <ion-icon slot="icon-only" name="trash"></ion-icon>
+                  <ion-item-option *ngIf="user.available" (click)="logicDownUser(user._id, !user.available)"
+                    color="success">
+                    <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
                   </ion-item-option>
+                  <ion-item-option *ngIf="!user.available" (click)="logicDownUser(user._id, !user.available)"
+                    color="danger">
+                    <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </div>
+          </ion-item-group>
 
+          <ion-item-group>
+            <ion-item-divider style="background: #7c1734; color: #f6f5f5;">
+              <ion-item style="--background: #7c1734; color: #f6f5f5;">
+                <ion-label>
+                  Usuarios sin asignar
+                </ion-label>
+              </ion-item>
+            </ion-item-divider>
+            <div class="mainList" *ngFor="let user of otherUsers">
+              <ion-item-sliding *ngIf="CurrentUser.hierarchy.level < 2">
+                <ion-item disabled="{{!user.available}}" style="background: #7c1734; color: #f6f5f5;">
+                  <ion-avatar slot="start">
+                    <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                  </ion-avatar>
+                  <ion-label>{{user.name}} {{user.lastname}}</ion-label>
+                </ion-item>
+                <ion-item-options side="start">
+                  <ion-item-option color="secondary" (click)="ringUser(user.phone)">
+                    <ion-icon slot="icon-only" name="call"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+                <ion-item-options side="end">
+                  <ion-item-option (click)="updateUser(user)">
+                    <ion-icon slot="icon-only" name="create"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option *ngIf="user.available" (click)="logicDownUser(user._id, !user.available)"
+                    color="success">
+                    <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option *ngIf="!user.available" (click)="logicDownUser(user._id, !user.available)"
+                    color="danger">
+                    <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                  </ion-item-option>
+                </ion-item-options>
+              </ion-item-sliding>
+            </div>
+          </ion-item-group>
+
+          <div class="mainList" *ngFor="let secretariat of secretariats" style="border-bottom: solid #f6f5f5;">
+            <ion-item-group *ngIf="secretariat.available">
+              <ion-item-divider>
+                <ion-item>
+                  <ion-label>{{secretariat.name}}</ion-label>
+                </ion-item>
+              </ion-item-divider>
+              <div *ngFor="let secretary of secretariat.secretary">
+                <ion-item-sliding *ngIf="secretariat.secretary.length > 0">
+                  <ion-item disabled="{{!secretary.available}}"
+                    style="background: #7c1734; color: #f6f5f5;">
+                    <ion-avatar slot="start">
+                      <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                    </ion-avatar>
+                    <ion-label>{{secretary.name}} {{secretary.lastname}}</ion-label>
+                  </ion-item>
+                  <ion-item-options side="start">
+                    <ion-item-option color="secondary" (click)="ringUser(secretary.phone)">
+                      <ion-icon slot="icon-only" name="call"></ion-icon>
+                    </ion-item-option>
+                  </ion-item-options>
+                  <ion-item-options side="end">
+                    <ion-item-option (click)="updateUser(secretary)">
+                      <ion-icon slot="icon-only" name="create"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option *ngIf="secretary.available"
+                      (click)="logicDownUser(secretary._id, !secretary.available)"
+                      color="success">
+                      <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                    </ion-item-option>
+                    <ion-item-option *ngIf="!secretary.available"
+                      (click)="logicDownUser(secretary._id, !secretary.available)"
+                      color="danger">
+                      <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                    </ion-item-option>
+                  </ion-item-options>
+                </ion-item-sliding>
+              </div>
+              <ion-accordion-group>
+                <ion-accordion>
+                  <ion-item slot="header">
+                    <ion-label>Direcciones</ion-label>
+                  </ion-item>
+                  <div *ngFor="let department of secretariat.departments" slot="content">
+                    <ion-item-divider *ngIf="department.available">
+                      <ion-item>
+                        <ion-icon slot="start" name="{{department.icon}}"
+                          style="color: {{department.color}};"></ion-icon>
+                        <ion-label>{{department.name}}</ion-label>
+                      </ion-item>
+                    </ion-item-divider>
+                    <div *ngFor="let user of users">
+                      <ion-item-sliding
+                        *ngIf="department.available && user.department == department._id && user.hierarchy.level > CurrentUser.hierarchy.level">
+                        <ion-item disabled="{{!user.available}}">
+                          <ion-avatar slot="start">
+                            <img src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                          </ion-avatar>
+                          <ion-label>{{user.name}} {{user.lastname}}</ion-label>
+                        </ion-item>
+                        <ion-item-options side="start">
+                          <ion-item-option color="secondary" (click)="ringUser(user.phone)">
+                            <ion-icon slot="icon-only" name="call"></ion-icon>
+                          </ion-item-option>
+                        </ion-item-options>
+                        <ion-item-options side="end">
+                          <ion-item-option (click)="updateUser(user)">
+                            <ion-icon slot="icon-only" name="create"></ion-icon>
+                          </ion-item-option>
+                          <ion-item-option *ngIf="user.available" (click)="logicDownUser(user._id, !user.available)"
+                            color="success">
+                            <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                          </ion-item-option>
+                          <ion-item-option *ngIf="!user.available" (click)="logicDownUser(user._id, !user.available)"
+                            color="danger">
+                            <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                          </ion-item-option>
+                        </ion-item-options>
+                      </ion-item-sliding>
+                    </div>
+                  </div>
+                </ion-accordion>
+              </ion-accordion-group>
+            </ion-item-group>
+            <br *ngIf="secretariat.available">
+          </div>
+        </ion-content>
+
+
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button (click)="addUser()" color="dark">
+            <ion-icon name="person-add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+
+      <div *ngIf="!firstSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let secretariat of ['','']">
+            <ion-item-group>
+              <div *ngFor="let department of ['','']">
+                <ion-item-divider>
+                  <ion-item>
+                    <ion-skeleton-text [animated]="true" style="width: 80px; margin: auto;"></ion-skeleton-text>
+                  </ion-item>
+                </ion-item-divider>
+                <ion-item>
+                  <ion-avatar slot="start">
+                    <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+                  </ion-avatar>
+                  <ion-label> <ion-skeleton-text [animated]="true" style="width: 80px;"></ion-skeleton-text>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-skeleton-text [animated]="true" style="width: 100px;"></ion-skeleton-text>
+                </ion-item>
+              </div>
+            </ion-item-group>
+          </div>
+        </ion-content>
+
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button color="dark">
+            <ion-icon name="person-add">
+            </ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="2">
+      <div *ngIf="secondSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let secretariat of secretariats">
+            <ion-item-divider>
+              <ion-item>
+                <ion-label>{{secretariat.name}}</ion-label>
+              </ion-item>
+              <ion-buttons slot="end">
+                <ion-button (click)="logicDownSecretariat(secretariat._id, !secretariat.available)">
+                  <ion-icon *ngIf="secretariat.available" slot="icon-only" name="power"
+                    style="color: #43c959"></ion-icon>
+                  <ion-icon *ngIf="!secretariat.available" slot="icon-only" name="power"
+                    style="color: #f6f5f5"></ion-icon>
+                </ion-button>
+                <ion-button (click)="updateSecretariat(secretariat._id, secretariat.name)">
+                  <ion-icon slot="icon-only" name="create" style="color: #f6f5f5"></ion-icon>
+                </ion-button>
+                <ion-button (click)="addDepartment(secretariat._id)">
+                  <ion-icon slot="icon-only" name="add" style="color: #f6f5f5"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item-divider>
+            <div *ngFor="let department of secretariat.departments">
+              <ion-item-sliding disabled="{{!secretariat.available}}">
+                <ion-item disabled="{{!department.available || !secretariat.available}}">
+                  <ion-icon slot="start" name="{{department.icon}}" style="color: {{department.color}};"></ion-icon>
+                  <ion-label>{{department.name}}</ion-label>
+                </ion-item>
+                <ion-item-options side="end">
+                  <ion-item-option
+                    (click)="updateDepartment(department._id, department.name, department.color, department.icon, department.info)">
+                    <ion-icon slot="icon-only" name="create"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option *ngIf="department.available"
+                    (click)="logicDownDepartment(department._id, !department.available)" color="success">
+                    <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                  </ion-item-option>
+                  <ion-item-option *ngIf="!department.available"
+                    (click)="logicDownDepartment(department._id, !department.available)" color="danger">
+                    <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                  </ion-item-option>
                 </ion-item-options>
               </ion-item-sliding>
             </div>
           </div>
-        </ion-item-group>
-      </ion-list>
+        </ion-content>
 
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="addUser()" color="dark">
-          <ion-icon name="person-add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button (click)="addSecretariat()" color="dark">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+
+      <div *ngIf="!secondSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let secretariat of ['','','','']">
+            <ion-item-divider>
+              <ion-item>
+                <ion-skeleton-text [animated]="true" style="width: 80px; margin: auto;"></ion-skeleton-text>
+              </ion-item>
+            </ion-item-divider>
+            <div *ngFor="let department of ['','']">
+              <ion-item>
+                <ion-avatar slot="start"> <ion-skeleton-text [animated]="true"></ion-skeleton-text> </ion-avatar>
+                <ion-label> <ion-skeleton-text [animated]="true" style="width: 80px;"> </ion-skeleton-text></ion-label>
+              </ion-item>
+            </div>
+          </div>
+
+        </ion-content>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button color="dark">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
     </div>
 
-    <div *ngSwitchCase="2" style="--background: rgb(32, 32, 32);">
-      <ion-list *ngFor="let department of departments">
-        <ion-item-sliding>
-          <ion-item>
-            <ion-icon slot="start" name="{{department.icon}}" style="color: {{department.color}};"></ion-icon>
-            <ion-label>{{department.name}}</ion-label>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option (click)="updateDepartment(department._id, department.name, department.color, department.icon, department.info)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-item-option>
-            <ion-item-option (click)="deleteDepartment(department._id)" color="danger">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
+    <div *ngSwitchCase="3">
+      <div *ngIf="thirdSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let servicePhone of servicePhones">
+            <ion-item-sliding>
+              <ion-item disabled="{{!servicePhone.available}}">
+                <ion-label>{{servicePhone.name}} <br> <ion-icon name="call"></ion-icon>
+                  {{servicePhone.phone}}</ion-label>
+              </ion-item>
+              <ion-item-options side="end">
+                <ion-item-option (click)="updateServicePhone(servicePhone._id, servicePhone.name, servicePhone.phone)">
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-item-option>
+                <ion-item-option *ngIf="servicePhone.available"
+                  (click)="logicDownServicePhone(servicePhone._id, !servicePhone.available)" color="success">
+                  <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                </ion-item-option>
+                <ion-item-option *ngIf="!servicePhone.available"
+                  (click)="logicDownServicePhone(servicePhone._id, !servicePhone.available)" color="danger">
+                  <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </div>
+        </ion-content>
 
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="addDepartment()" color="dark">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button (click)="addServicePhone()" color="dark">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+
+      <div *ngIf="!thirdSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let department of ['','','','']">
+            <ion-item>
+              <ion-label>
+                <ion-skeleton-text [animated]="true" style="width: 250px;"></ion-skeleton-text>
+                <ion-skeleton-text [animated]="true" style="width: 200px;"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-content>
+
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button color="dark">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
     </div>
 
-    <div *ngSwitchCase="3" style="--background: rgb(32, 32, 32);">
-      <ion-list *ngFor="let servicePhone of servicePhones">
-        <ion-item-sliding>
-          <ion-item>
-            <ion-label>{{servicePhone.name}}</ion-label>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option (click)="updateServicePhone(servicePhone._id, servicePhone.name, servicePhone.phone)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-item-option>
-            <ion-item-option (click)="deleteServicePhone(servicePhone._id)" color="danger">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
+    <div *ngSwitchCase="4">
+      <div *ngIf="fourdSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let hierarchy of hierarchies">
+            <ion-item-sliding>
+              <ion-item disabled="{{!hierarchy.available}}">
+                <ion-label>{{hierarchy.name}}</ion-label>
+              </ion-item>
+              <ion-item-options side="end">
+                <ion-item-option (click)="updateHierarchy(hierarchy._id, hierarchy.name, hierarchy.level)">
+                  <ion-icon slot="icon-only" name="create"></ion-icon>
+                </ion-item-option>
+                <ion-item-option *ngIf="hierarchy.available"
+                  (click)="logicDownHierarchy(hierarchy._id, !hierarchy.available)" color="success">
+                  <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                </ion-item-option>
+                <ion-item-option *ngIf="!hierarchy.available"
+                  (click)="logicDownHierarchy(hierarchy._id, !hierarchy.available)" color="danger">
+                  <ion-icon slot="icon-only" name="power" style="color: #f6f5f5"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </div>
+        </ion-content>
 
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="addServicePhone()" color="dark">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button (click)="addHierarchy()" color="dark">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
+
+      <div *ngIf="!fourdSegmentLoaded" style="--background: rgb(32, 32, 32);">
+        <ion-content [fullscreen]="true">
+          <div class="mainList" *ngFor="let department of ['','','','']">
+            <ion-item>
+              <ion-label>
+                <ion-skeleton-text [animated]="true" style="width: 250px;"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-content>
+
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button color="dark">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </div>
     </div>
-
-    <div *ngSwitchCase="4" style="--background: rgb(32, 32, 32);">
-      <ion-list *ngFor="let hierarchy of hierarchies">
-        <ion-item-sliding>
-          <ion-item>
-            <ion-label>{{hierarchy.name}}</ion-label>
-          </ion-item>
-          <ion-item-options side="end">
-            <ion-item-option (click)="updateHierarchy(hierarchy._id, hierarchy.name, hierarchy.level)">
-              <ion-icon slot="icon-only" name="create"></ion-icon>
-            </ion-item-option>
-            <ion-item-option (click)="deleteHierarchy(hierarchy._id)" color="danger">
-              <ion-icon slot="icon-only" name="trash"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-list>
-
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button (click)="addHierarchy()" color="dark">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
-    </div>
-
   </div>
 
 

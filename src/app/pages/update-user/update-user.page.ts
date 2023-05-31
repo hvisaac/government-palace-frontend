@@ -11,8 +11,10 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class UpdateUserPage implements OnInit {
 
-  departments: any[];
-  roles: any[];
+  secretariats: any[] = [];
+  departments: any[] = [];
+  hierarchies: any[] = [];
+  CurrentUser: any;
 
   @Input()
   id: string;
@@ -30,13 +32,39 @@ export class UpdateUserPage implements OnInit {
   department: string
 
   @Input()
-  role: string
+  secretariat: string
 
   @Input()
-  departmentSelect: string
+  hierarchy: any;
+
+  @Input()
+  userHierarchy: any;
+
+  @Input()
+  userDepartment: string;
+
+  @Input()
+  userSecretariat: string;
 
   @Input()
   roleSelect: string
+
+  @Input()
+  transfer: boolean;
+
+  @Input()
+  waitingStatus: boolean;
+
+  @Input()
+  workingStatus: boolean
+
+  @Input()
+  finishStatus: boolean
+
+  @Input()
+  password: string;
+
+  @ViewChild('test') test: IonSelect
 
   constructor(
     private userService: UserService,
@@ -45,36 +73,71 @@ export class UpdateUserPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('department -> ' + this.department)
-    console.log('role -> ' + this.role)
+    this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
     this.configService.getDepartments().subscribe((data: any) => {
-      this.departments = data;
+      if (this.CurrentUser.hierarchy.level > 0) {
+        for (let department of data) {
+          for (let userDepartment of this.CurrentUser.departments) {
+            if (userDepartment == department._id) {
+              this.departments.push(department);
+            }
+          }
+        }
+      } else {
+        this.departments = data;
+      }
     });
     this.configService.getHierarchies().subscribe((data: any) => {
-      this.roles = data;
+      this.hierarchies = data;
     });
+    this.configService.getSecretariats().subscribe((data: any) => {
+      this.secretariats = data;
+    });
+  }
+
+  ngAfterViewInit() {
     setTimeout(() => {
-      this.departmentSelect = this.department;
-      this.roleSelect = this.role;
-    }, 1000);
+      this.userHierarchy = this.hierarchy;
+      this.userDepartment = this.department;
+      this.userSecretariat = this.secretariat;
+    }, 2000);
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1._id === o2._id;//Compare by id
+  }
+
+  clearData(event) {
+    console.log(event.detail.value)
+    if (event.detail.value.level == 1) {
+      this.userSecretariat = '';
+      this.userDepartment = '';
+    }
+    if (event.detail.value.level == 2) {
+      this.userDepartment = '';
+    }
+    if (event.detail.value.level > 2) {
+      this.userSecretariat = '';
+    }
 
   }
 
-  SignUp
-    (
-      phone: string,
-      name: string,
-      lastname: string,
-      department: string,
-      role: string
-    ) {
+  updateUser() {
     const user = {
       id: this.id,
-      phone: phone,
-      name: name,
-      lastname: lastname,
-      department: department,
-      role: role,
+      phone: this.phone,
+      password: this.password,
+      name: this.name,
+      lastname: this.lastname,
+      secretariat: this.userSecretariat,
+      department: this.userDepartment,
+      hierarchy: this.userHierarchy._id,
+      permissions: {
+        waitingStatus: this.waitingStatus,
+        workingStatus: this.workingStatus,
+        finishStatus: this.finishStatus,
+        transfer: this.transfer,
+      }
     }
 
     this.userService.updateUser(user).subscribe(response => this.modalController.dismiss({ response: 'success' }));

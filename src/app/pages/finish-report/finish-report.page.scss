@@ -8,6 +8,10 @@ ion-back-button {
     color: #7c1734;
 }
 
+ion-card {
+    background: #7c1734;
+}
+
 ion-content{
     --background: #B22241;
     border-left: 7px solid #f6f5f5;
@@ -66,6 +70,9 @@ ion-content{
                 text-align: center;
                 align-self: center;
                 margin: auto;
+                margin-top: 15px; 
+                margin-bottom: 5px;
+                padding: 5px;
             }
         }
     }

@@ -1,10 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { AlertController, IonItem, ModalController, NavController } from '@ionic/angular';
+import { AlertController, IonItem, ModalController, NavController, Platform } from '@ionic/angular';
 import { ReportsPerDepartmentPage } from './pages/reports-per-department/reports-per-department.page';
 import { SettingsPage } from './pages/settings/settings.page';
 import { ConfigService } from './services/config.service';
 import { ReportService } from './services/report.service';
-import { Platform } from '@ionic/angular'; 
 
 @Component({
   selector: 'app-root',
@@ -13,41 +12,60 @@ import { Platform } from '@ionic/angular';
 })
 export class AppComponent {
 
+  CurrentUser: any;
   Departments: any[] = [];
   AllReports: any[] = [];
+  showGlobalSettings: boolean = false
+
   constructor(
     private configService: ConfigService,
     private reportService: ReportService,
     private navController: NavController,
     private alertController: AlertController,
     private modalController: ModalController,
-    private platform: Platform,
   ) {
   }
 
   ngOnInit() {
+    this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
+    if (this.CurrentUser != undefined) {
+      this.configService.getDepartments().subscribe((data: any) => {
+        if (this.CurrentUser.hierarchy.level > 1) {
+          for (let department of data) {
+            department.secretariat = JSON.parse(department.secretariat)[0];
+            for (let userDepartment of this.CurrentUser.departments) {
+              if (userDepartment == department._id && department.secretariat.available && department.available) {
+                this.Departments.push(department);
+              }
+            }
+          }
+        } else {
+          if (this.CurrentUser.hierarchy.level == 0) this.showGlobalSettings = true
+          for (let department of data) {
+            department.secretariat = JSON.parse(department.secretariat)[0];
+            if (department.secretariat.available && department.available) {
+              this.Departments.push(department);
+            }
+          }
+        }
+      });
 
-    
-    this.configService.getDepartments().subscribe((data: any) => {
-      this.Departments = data;
-    });
-
-    this.reportService.countAllReports().subscribe((data: any) => {
-      this.AllReports = data;
-    });
-
+      this.reportService.countAllReports().subscribe((data: any) => {
+        this.AllReports = data;
+      });
+    }
   }
 
-  async openSettings(){
+  async openSettings() {
     const currentUser = JSON.parse(sessionStorage.getItem('user'));
     console.log(currentUser)
     const modal = await this.modalController.create({
       component: SettingsPage,
       componentProps: {
-        id: currentUser.id,
-        username: currentUser.data.name,
-        password: currentUser.data.password,
-        hierarchy: currentUser.data.hierarchy.level
+        id: currentUser._id,
+        username: currentUser.name,
+        password: currentUser.password,
+        hierarchy: currentUser.hierarchy.level
       }
     });
 
@@ -83,7 +101,7 @@ export class AppComponent {
     sessionStorage.clear();
     this.navController.navigateRoot('/login');
   }
-  
+
   async openReports(id) {
     const modal = await this.modalController.create({
       component: ReportsPerDepartmentPage,

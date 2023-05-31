@@ -5,11 +5,11 @@
   </div>
 
   <div class="form">
-    <ion-input placeholder="Nombre" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-input placeholder="Teléfono" type="tel" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
     <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" #ctrl="ngModel"></ion-input>
   </div>
 
-  <div class="button" (click)="SignIn(name, password)">
+  <div class="button" (click)="SignIn(phone, password)">
     Iniciar Sesión <ion-icon name="chevron-forward-outline"></ion-icon>
   </div>
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
-import { UserInterface } from 'src/app/interfaces/user-interface';
+import { ConfigService } from 'src/app/services/config.service';
 import { ReportService } from 'src/app/services/report.service';
 import { CustomReportsPage } from '../custom-reports/custom-reports.page';
 
@@ -18,60 +18,134 @@ export class AdvanceSearchPage implements OnInit {
 
   CurrentUser: any;
   Reports: any[] = [];
+  filter
 
   constructor(
     private reportService: ReportService,
     private NavController: NavController,
     private MenuController: MenuController,
     private modalController: ModalController,
+    private configService: ConfigService
   ) { }
 
   ngOnInit() {
     this.MenuController.enable(false);
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
-    console.log(this.CurrentUser);
     if (this.CurrentUser == null) {
       this.NavController.navigateRoot('/login');
     } else {
       this.MenuController.enable(true);
     }
+    this.configService.getSecretariats().subscribe((secretariats: any) => {
+      if (secretariats) {
+        if (this.CurrentUser.secretariat) {
+          for (const secretariat of secretariats) {
+            if (secretariat._id == this.CurrentUser.secretariat) {
+              this.CurrentUser.secretariat = secretariat
+            }
+          }
+        }
+      }
+    })
   }
 
   searchReports(option: number) {
     if (option == 1) {
-
-    }
-    if (option == 2) {
       this.getByContent(this.content);
     }
-    if (option == 3) {
+    if (option == 2) {
+      if (this.beginDate == null) this.beginDate = new Date()
+      if (this.finalDate == null) this.finalDate = new Date()
       this.getByDate(this.beginDate, this.finalDate);
     }
   }
 
   getByDate(beginDate: Date, finalDate: Date) {
-    this.reportService.getReportsByDate(beginDate, finalDate).subscribe((reports: any) => {
-      let formatReports: any[] = [];
-      for (let report of reports) {
-        report.department = JSON.parse(report.department);
-        formatReports.push(report);
-      }
-      console.log(formatReports)
-      this.openReports(formatReports);
-    });
+    let formatReports: any[] = [];
+    switch (this.CurrentUser.hierarchy.level) {
+      case 0:
+        this.reportService.getReportsByDate(beginDate, finalDate, '').subscribe((reports: any) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            formatReports.push(report);
+          }
+        });
+        break;
+      case 1:
+        this.reportService.getReportsByDate(beginDate, finalDate, '').subscribe((reports: any) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            formatReports.push(report);
+          }
+        });
+        break;
+      case 2:
+        for (const department of this.CurrentUser.secretariat.departments) {
+          this.reportService.getReportsByDate(beginDate, finalDate, department._id).subscribe((reports: any) => {
+            for (let report of reports) {
+              report.department = JSON.parse(report.department);
+              formatReports.push(report);
+            }
+          });
+        }
+        break;
+      case 3:
+        this.reportService.getReportsByDate(beginDate, finalDate, this.CurrentUser.department).subscribe((reports: any) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            formatReports.push(report);
+          }
+        });
+        break;
+      default:
+        break;
+    }
+    this.openReports(formatReports);
+
   }
 
   getByContent(content: string) {
-    this.reportService.getReportByContent(content).subscribe((reports: any) => {
-      let formatReports: any[] = [];
-      for (let report of reports) {
-        report.department = JSON.parse(report.department);
-        console.log(report);
-        formatReports.push(report);
-      }
-      console.log(formatReports)
-      this.openReports(formatReports);
-    });
+    let formatReports: any[] = [];
+    switch (this.CurrentUser.hierarchy.level) {
+      case 0:
+        this.reportService.getReportByContent(content, '').subscribe((reports: any) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            formatReports.push(report);
+          }
+        });
+        break;
+      case 1:
+        this.reportService.getReportByContent(content, '').subscribe((reports: any) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            formatReports.push(report);
+          }
+        });
+        break;
+      case 2:
+        for (const department of this.CurrentUser.secretariat.departments) {
+          this.reportService.getReportByContent(content, department._id).subscribe((reports: any) => {
+            for (let report of reports) {
+              report.department = JSON.parse(report.department);
+              formatReports.push(report);
+            }
+          });
+        }
+        break;
+      case 3:
+        this.reportService.getReportByContent(content, this.CurrentUser.department).subscribe((reports: any) => {
+          for (let report of reports) {
+            report.department = JSON.parse(report.department);
+            formatReports.push(report);
+          }
+        });
+        break;
+      default:
+        break;
+    }
+    this.openReports(formatReports);
+
   }
 
   async openReports(reports: any[]) {

@@ -11,24 +11,64 @@
   </div>
 
   <div class="form">
+    <ion-label> Nombre(s) </ion-label>
     <ion-input placeholder="Nombre(s)" [(ngModel)]="name" #ctrl="ngModel"></ion-input>
+    <ion-label> Apellidos </ion-label>
     <ion-input placeholder="Apellidos" [(ngModel)]="lastname" #ctrl="ngModel"></ion-input>
-    <ion-input placeholder="Número de teléfono" type="number" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
-    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="departmentSelect"
-      placeholder="Departamento">
-      <ion-list *ngFor="let department of departments">
-        <ion-select-option value="{{department._id}}">{{department.name}}</ion-select-option>
+    <ion-label> Teléfono </ion-label>
+    <ion-input placeholder="Número de teléfono" type="tel" [(ngModel)]="phone" #ctrl="ngModel"></ion-input>
+    <ion-label> Contraseña </ion-label>
+    <ion-input placeholder="Contraseña" type="password" [(ngModel)]="password" #ctrl="ngModel"></ion-input>
+    <ion-label> Nivel </ion-label>
+    <ion-select *ngIf="userHierarchy != undefined" style="--background:  #911f3e; color: #f6f5f5;"
+      [(ngModel)]="userHierarchy" placeholder="Nivel" [compareWith]="compareObjects" (ionChange)="clearData($event)">
+      <ion-list *ngFor="let hierarchy of hierarchies">
+        <ion-select-option *ngIf="hierarchy.level > CurrentUser.hierarchy.level"
+          [value]="hierarchy">{{hierarchy.name}}</ion-select-option>
       </ion-list>
     </ion-select>
-    <ion-select style="--background:  #911f3e; color: #f6f5f5;" [(ngModel)]="roleSelect"
-    placeholder="Rol">
-    <ion-list *ngFor="let role of roles">
-      <ion-select-option *ngIf="role.level > 0" value="{{role._id}}">{{role.name}}</ion-select-option>
+    <div *ngIf="userHierarchy != null">
+      <ion-label *ngIf="userHierarchy.level > 2 "> Dirección </ion-label>
+      <ion-select *ngIf="userHierarchy.level > 2 " style="--background:  #911f3e; color: #f6f5f5;"
+        [(ngModel)]="userDepartment" placeholder="Dirección">
+        <ion-list *ngFor="let department of departments">
+          <ion-select-option *ngIf="department.available"
+            value="{{department._id}}">{{department.name}}</ion-select-option>
+        </ion-list>
+      </ion-select>
+      <ion-label *ngIf="userHierarchy.level == 2 "> Secretaría </ion-label>
+      <ion-select *ngIf="userHierarchy.level == 2 " style="--background:  #911f3e; color: #f6f5f5;"
+        [(ngModel)]="userSecretariat" placeholder="Secretaría">
+        <ion-list *ngFor="let secretariat of secretariats">
+          <ion-select-option *ngIf="secretariat.available"
+            value="{{secretariat._id}}">{{secretariat.name}}</ion-select-option>
+        </ion-list>
+      </ion-select>
+    </div>
+    <ion-list>
+      <ion-list-header>
+        <ion-label> Permisos de reportes </ion-label>
+      </ion-list-header>
+      <ion-item>
+        <ion-checkbox [(ngModel)]="transfer" #ctrl="ngModel" slot="start"></ion-checkbox>
+        <ion-label>Transferir</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-checkbox [(ngModel)]="waitingStatus" #ctrl="ngModel" slot="start"></ion-checkbox>
+        <ion-label>Estatus en espera</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-checkbox [(ngModel)]="workingStatus" #ctrl="ngModel" slot="start"></ion-checkbox>
+        <ion-label>Estatus trabajando</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-checkbox [(ngModel)]="finishStatus" #ctrl="ngModel" slot="start"></ion-checkbox>
+        <ion-label>Estatus finalizado</ion-label>
+      </ion-item>
     </ion-list>
-  </ion-select>
   </div>
 
-  <div class="button" (click)="SignUp(phone, name, lastname, department, role)">
+  <div class="button" (click)="updateUser()">
     Registrar <ion-icon name="chevron-forward-outline"></ion-icon>
   </div>
 

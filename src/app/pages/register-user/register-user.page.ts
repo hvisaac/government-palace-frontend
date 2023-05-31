@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavController, MenuController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { ConfigService } from 'src/app/services/config.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -9,8 +9,11 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./register-user.page.scss'],
 })
 export class RegisterUserPage implements OnInit {
-  departments: any[];
-  hierarchies: any[];
+
+  secretariats: any[] = [];
+  departments: any[] = [];
+  hierarchies: any[] = [];
+  CurrentUser: any;
 
   @Input()
   phone: string;
@@ -25,13 +28,16 @@ export class RegisterUserPage implements OnInit {
   lastname: string;
 
   @Input()
-  userDepartments: string[];
+  userDepartment: string[];
+
+  @Input()
+  userSecretariat: string;
 
   @Input()
   role: string;
 
   @Input()
-  hierarchy: string;
+  hierarchy: any;
 
   @Input()
   waitingStatus: boolean;
@@ -42,50 +48,74 @@ export class RegisterUserPage implements OnInit {
   @Input()
   finishStatus: boolean
 
+  @Input()
+  transfer: boolean
+
   constructor(
     private AuthService: AuthService,
     private configService: ConfigService,
     private modalController: ModalController,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
+    this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
     this.configService.getDepartments().subscribe((data: any) => {
-      this.departments = data;
+      if (this.CurrentUser.hierarchy.level > 0) {
+        for (let department of data) {
+          for (let userDepartment of this.CurrentUser.departments) {
+            if (userDepartment == department._id) {
+              this.departments.push(department);
+            }
+          }
+        }
+      } else {
+        this.departments = data;
+      }
     });
     this.configService.getHierarchies().subscribe((data: any) => {
       this.hierarchies = data;
     });
+    this.configService.getSecretariats().subscribe((data: any) => {
+      this.secretariats = data;
+    });
   }
 
-  SignUp
-    (
-      phone: string,
-      password: string,
-      name: string,
-      lastname: string,
-      departments: String[],
-      waitingStatus: boolean,
-      workingStatus: boolean,
-      finishStatus: boolean,
-      hierarchy: string,
-    ) {
+  SignUp() {
 
     let request = {
-      phone: phone,
-      password: password,
-      name: name,
-      lastname: lastname,
+      phone: this.phone,
+      password: this.password,
+      name: this.name,
+      lastname: this.lastname,
       urlPhoto: '',
-      departments: departments,
+      department: this.userDepartment,
+      secretariat: this.userSecretariat,
       permissions: {
-        waitingStatus: waitingStatus,
-        workingStatus: workingStatus,
-        finishStatus: finishStatus,
+        tranfer: this.transfer,
+        waitingStatus: this.waitingStatus,
+        workingStatus: this.workingStatus,
+        finishStatus: this.finishStatus,
       },
-      hierarchy: hierarchy,
+      hierarchy: this.hierarchy._id,
     }
-    console.log(request)
-    this.AuthService.SignUp(request).subscribe(response => this.modalController.dismiss({ response: 'success' }));
+    this.AuthService.SignUp(request).subscribe(() => {
+      this.modalController.dismiss({ response: 'success' })
+    }, (err) => {
+      if (err.status == 400) {
+        this.presentAlert('El número de teléfono que intentas ingresar ya existe');
+      }
+    });
+  }
+
+  async presentAlert(message) {
+    const alert = await this.alertController.create({
+      header: 'Alerta',
+      message: message,
+      buttons: ['OK'],
+    });
+
+    await alert.present();
   }
 
   dismiss() {

@@ -1,11 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
-import { MapService } from 'src/app/services/map.service';
-import { UserInterface } from '../../interfaces/user-interface';
-import { ReportService } from '../../services/report.service';
-import { Geolocation } from '@capacitor/geolocation';
-import { MapPage } from '../map/map.page';
-import { GaleryPage } from '../galery/galery.page';
+
 import { ConfigService } from 'src/app/services/config.service';
 import { Chart } from 'chart.js';
 import { ReportsPerDepartmentPage } from '../reports-per-department/reports-per-department.page';
@@ -27,14 +22,17 @@ export class HomePage {
   departmentsReports: any[] = [];
   departmentsWorkingReports: any[] = [];
   departmentsFinishedsReports: any[] = [];
+  waitingRepots: number = 0
+  workingRepots: number = 0
+  solvedRepots: number = 0
   option: number;
+  reportsLoaded: boolean = false;
 
   constructor(
     private menuController: MenuController,
     private navController: NavController,
     private configService: ConfigService,
     private modalController: ModalController,
-
   ) { }
 
   ngOnInit() {
@@ -45,25 +43,44 @@ export class HomePage {
     } else {
       this.menuController.enable(true);
       this.configService.getDepartments().subscribe((departments: any[]) => {
-        console.log(departments)
-        this.departments = departments;
-        for (const department of departments) {
-          this.departmentsNames.push(department.name);
-          this.departmentsColors.push(department.color);
-          this.departmentsReports.push(department.reports);
-          this.departmentsWorkingReports.push(department.workingReports);
-          this.departmentsFinishedsReports.push(department.finishedsReports);
+        if (departments) {
+          for (const department of departments) {
+            department.secretariat = JSON.parse(department.secretariat)[0];
+            if (department.secretariat.available && department.available && department.name != "Spam") {
+              this.departments.push(department);
+              this.departmentsNames.push(department.name);
+              this.departmentsColors.push(department.color);
+              this.departmentsReports.push(department.reports);
+              this.departmentsWorkingReports.push(department.workingReports);
+              this.departmentsFinishedsReports.push(department.finishedsReports);
+              this.waitingRepots += department.reports
+              this.workingRepots += department.workingReports
+              this.solvedRepots += department.finishedsReports
+            }
+          }
+          this.reportsLoaded = true;
         }
       });
-
-      setTimeout(() => {
-        if (this.CurrentUser.hierarchy.level == 0) {
-          this.doughnutChartMethod();
-        } else {
-          this.doughnutChartMethodDepartment(this.CurrentUser.department);
+      this.configService.getSecretariats().subscribe((secretariats: any) => {
+        if (secretariats) {
+          for (const secretariat of secretariats) {
+            if (this.CurrentUser.secretariat && secretariat._id == this.CurrentUser.secretariat) {
+              this.CurrentUser.secretariat = secretariat
+            }
+          }
         }
-      }, 1500);
+      })
     }
+  }
+
+  ngAfterViewInit(){
+    setTimeout(() => {
+      if (this.CurrentUser.hierarchy.level < 2) {
+        this.doughnutChartMethod();
+      } else {
+        this.doughnutChartMethodDepartment(this.CurrentUser.hierarchy.level);
+      }
+    }, 1500);
   }
 
   openMenu() {
@@ -107,7 +124,7 @@ export class HomePage {
     });
   }
 
-  doughnutChartMethodDepartment(department) {
+  doughnutChartMethodDepartment(hierarchy) {
     this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
       type: 'pie',
       data: {
@@ -120,8 +137,22 @@ export class HomePage {
         }],
       },
       options: {
-        onClick: () => {
-          this.openReports(department);
+        onClick: (event, element, chart) => {
+          switch (hierarchy) {
+            case 2:
+              for (const department of this.CurrentUser.secretariat.departments) {
+                if (department._id == this.departments[element[0].index]._id) {
+                  this.openReports(department._id)
+                }
+              }
+              break;
+            case 3:
+              if (this.CurrentUser.department == this.departments[element[0].index]._id) {
+                this.openReports(this.departments[element[0].index]._id);
+              }
+            default:
+              break;
+          }
         },
         plugins: {
           tooltip: {
@@ -152,6 +183,8 @@ export class HomePage {
     });
 
     await modal.present();
+
+    await modal.onDidDismiss().then(() => window.location.reload());
 
   }
 

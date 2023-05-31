@@ -1,14 +1,75 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
-    <ion-title>galery</ion-title>
-  </ion-toolbar>
-</ion-header>
+<div *ngIf="imageLoaded">
+  <ion-header>
+    <ion-toolbar>
+      <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+      <ion-title></ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
-  <ion-grid>
-    <ion-row>
-        <ion-img [src]="photo"></ion-img>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+  <ion-content [fullscreen]="true">
+    <ion-card>
+      <ion-img *ngIf="report.media.reportedImage" alt="reported photo" src={{report.media.reportedImage}}></ion-img>
+      <ion-img *ngIf="!report.media.reportedImage" alt="reportedPhoto" src="assets/app-icons/not-photo.png" style="height: 200px; width: 200px; margin: auto; margin-top: 15px; margin-bottom: 5px;"></ion-img>
+      <ion-card-header>
+        <ion-card-title>Foto del contribuyente</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        {{report.description}}
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-img *ngIf="report.media.resolvedImage" alt="resolved photo" src={{report.media.resolvedImage}}></ion-img>
+      <ion-img *ngIf="!report.media.resolvedImage" alt="resolvedPhoto" src="assets/app-icons/not-photo.png" style="height: 200px; width: 200px; margin: auto; margin-top: 15px; margin-bottom: 5px;"></ion-img>
+      <ion-card-header>
+        <ion-card-title>Foto de reporte resuelto</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        {{report.finishedDescription}}
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</div>
+
+<div *ngIf="!imageLoaded">
+  <ion-header>
+    <ion-toolbar>
+      <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+      <ion-title></ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-card>
+      <ion-thumbnail style="width: 150px; height: 150px; margin: auto; margin-top: 10px; margin-bottom: 10px;">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-skeleton-text [animated]="true" style="width: 200px"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-thumbnail style="width: 150px; height: 150px; margin: auto; margin-top: 10px; margin-bottom: 10px;">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </ion-thumbnail>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-skeleton-text [animated]="true" style="width: 200px"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+</div>

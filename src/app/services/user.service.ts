@@ -28,4 +28,17 @@ export class UserService {
   changeUserAndPassword(object){
     return this.http.put(`${environment.api}/users/${object.id}/user-and-password`, object);
   }
+
+  enableUser(id) {
+    let request = {
+      available: true
+    }
+    return this.http.put(`${environment.api}/users/${id}/user`, request);
+  }
+  disableUser(id) {
+    let request = {
+      available: false
+    }
+    return this.http.put(`${environment.api}/users/${id}/user`, request);
+  }
 }

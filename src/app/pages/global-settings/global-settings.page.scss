@@ -13,7 +13,7 @@ ion-toolbar{
     }
 }
 
-ion-list {
+.mainList {
     background: #B22241;
     ion-item {
         --background: #B22241;
@@ -34,4 +34,8 @@ ion-back-button {
 
 ion-item{
     color: #f6f5f5;
+}
+
+ion-skeleton-text {
+    --border-radius: 9999px;
 }

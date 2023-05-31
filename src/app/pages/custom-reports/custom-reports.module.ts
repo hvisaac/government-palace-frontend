@@ -12,11 +12,17 @@ import { GaleryPageModule } from '../galery/galery.module';
 
 import { MapPage } from '../map/map.page';
 import { MapPageModule } from '../map/map.module';
+import { FinishReportPage } from '../finish-report/finish-report.page';
+import { NotesPage } from '../notes/notes.page';
+import { FinishReportPageModule } from '../finish-report/finish-report.module';
+import { NotesPageModule } from '../notes/notes.module';
 
 @NgModule({
   entryComponents: [
     MapPage,
-    GaleryPage
+    GaleryPage,
+    FinishReportPage,
+    NotesPage
   ],
   imports: [
     CommonModule,
@@ -25,6 +31,8 @@ import { MapPageModule } from '../map/map.module';
     CustomReportsPageRoutingModule,
     MapPageModule,
     GaleryPageModule,
+    FinishReportPageModule,
+    NotesPageModule
   ],
   declarations: [CustomReportsPage]
 })

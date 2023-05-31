@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PhotoInterface } from 'src/app/interfaces/photo-interface';
 import { ModalController } from '@ionic/angular';
 import { ReportService } from 'src/app/services/report.service';
 
@@ -11,7 +10,8 @@ import { ReportService } from 'src/app/services/report.service';
 export class GaleryPage implements OnInit {
 
   @Input() _idReport: string;
-  photo: string;
+  report: any;
+  imageLoaded: boolean = false;
 
   constructor(
     private ModalController: ModalController,
@@ -19,9 +19,14 @@ export class GaleryPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.reportService.getReportById(this._idReport).subscribe((data: any) => {
-      this.photo = data[0].photo;
-    })
+    setTimeout(() => {
+      this.reportService.getReportById(this._idReport).subscribe((data: any) => {
+        this.report = data;
+        if (this.report) {
+          this.imageLoaded = true
+        }
+      })
+    }, 1000);
   }
 
   dismiss(){

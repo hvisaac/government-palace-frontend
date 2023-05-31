@@ -1,14 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuController, ModalController, NavController, ToastController } from '@ionic/angular';
-import { UserInterface } from 'src/app/interfaces/user-interface';
 import { ConfigService } from 'src/app/services/config.service';
+import { LoadingService } from 'src/app/services/loading.service';
 import { UserService } from 'src/app/services/user.service';
 import { RegisterDepartmentPage } from '../register-department/register-department.page';
 import { RegisterHierarchyPage } from '../register-hierarchy/register-hierarchy.page';
+import { RegisterSecretariatPage } from '../register-secretariat/register-secretariat.page';
 import { RegisterServicePhonePage } from '../register-service-phone/register-service-phone.page';
 import { RegisterUserPage } from '../register-user/register-user.page';
 import { UpdateDepartmentPage } from '../update-department/update-department.page';
 import { UpdateHierarchyPage } from '../update-hierarchy/update-hierarchy.page';
+import { UpdateSecretariatPage } from '../update-secretariat/update-secretariat.page';
 import { UpdateServicePhonePage } from '../update-service-phone/update-service-phone.page';
 import { UpdateUserPage } from '../update-user/update-user.page';
 
@@ -22,9 +24,16 @@ export class GlobalSettingsPage implements OnInit {
   option: number;
   departments: any[] = [];
   users: any[] = [];
+  otherUsers: any[] = [];
+  superUsers: any[] = [];
   servicePhones: any[] = [];
   hierarchies: any[] = [];
+  secretariats: any[] = [];
   permissions: any;
+  firstSegmentLoaded: boolean = false;
+  secondSegmentLoaded: boolean = false;
+  thirdSegmentLoaded: boolean = false;
+  fourdSegmentLoaded: boolean = false;
 
   constructor(
     private menuController: MenuController,
@@ -33,6 +42,7 @@ export class GlobalSettingsPage implements OnInit {
     private userService: UserService,
     private modalController: ModalController,
     private toastController: ToastController,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit() {
@@ -42,16 +52,58 @@ export class GlobalSettingsPage implements OnInit {
       this.navController.navigateRoot('/login');
     } else {
       this.menuController.enable(true);
-      console.log(this.CurrentUser)
+      this.configService.getSecretariats().subscribe((data: any) => {
+        for (let secretariat of data) {
+          for (let secretary of secretariat.secretary) {
+            secretary.hierarchy = JSON.parse(secretary.hierarchy)[0]
+          }
+          if (this.CurrentUser.hierarchy.level > 0) {
+            for (let userSecretariat of this.CurrentUser.departments) {
+              if (userSecretariat == secretariat._id) {
+                this.secretariats.push(secretariat);
+              }
+            }
+          } else {
+            this.secretariats = data;
+          }
+        }
+      });
       this.configService.getDepartments().subscribe((data: any) => {
-        this.departments = data;
+        if (this.CurrentUser.hierarchy.level > 0) {
+          for (let department of data) {
+            for (let userDepartment of this.CurrentUser.departments) {
+              if (userDepartment == department._id) {
+                this.departments.push(department);
+              }
+            }
+          }
+        } else {
+          this.departments = data;
+        }
       });
       this.userService.getUsers().subscribe((data: any) => {
         for (let user of data) {
           user.hierarchy = JSON.parse(user.hierarchy);
-          this.users.push(user);
+          if (user.hierarchy.level == 1) {
+            this.superUsers.push(user);
+          } else if(user.hierarchy.level > 1 && !user.secretariat && !user.department) {
+            this.otherUsers.push(user)
+          }
+          else{
+            this.users.push(user);
+          }
         }
-        console.log(this.users)
+        this.users.sort((n1, n2) => {
+          if (n1.hierarchy.level > n2.hierarchy.level) {
+            return 1;
+          }
+
+          if (n1.hierarchy.level < n2.hierarchy.level) {
+            return -1;
+          }
+
+          return 0;
+        });
       });
       this.configService.getServicePhones().subscribe((data: any) => {
         this.servicePhones = data;
@@ -65,11 +117,31 @@ export class GlobalSettingsPage implements OnInit {
 
   segmentChange(event) {
     if (event.detail.value == 1) {
-
+      this.firstSegmentLoaded = false;
+      setTimeout(() => {
+        this.firstSegmentLoaded = true;
+      }, 1000);
     }
 
     if (event.detail.value == 2) {
+      this.secondSegmentLoaded = false;
+      setTimeout(() => {
+        this.secondSegmentLoaded = true;
+      }, 1000);
+    }
 
+    if (event.detail.value == 3) {
+      this.thirdSegmentLoaded = false;
+      setTimeout(() => {
+        this.thirdSegmentLoaded = true;
+      }, 1000);
+    }
+
+    if (event.detail.value == 4) {
+      this.fourdSegmentLoaded = false;
+      setTimeout(() => {
+        this.fourdSegmentLoaded = true;
+      }, 1000);
     }
   }
 
@@ -77,12 +149,18 @@ export class GlobalSettingsPage implements OnInit {
     this.menuController.open();
   }
 
+  ringUser(phone) {
+    window.open(`tel:${phone}`);
+  }
+
   async addUser() {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: RegisterUserPage,
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());
 
     const data: any = await modal.onDidDismiss();
 
@@ -93,12 +171,17 @@ export class GlobalSettingsPage implements OnInit {
     }
   }
 
-  async addDepartment() {
+  async addDepartment(secretariat) {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: RegisterDepartmentPage,
+      componentProps: {
+        secretariat: secretariat
+      }
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());;
 
 
     const data: any = await modal.onDidDismiss();
@@ -111,11 +194,13 @@ export class GlobalSettingsPage implements OnInit {
   }
 
   async addServicePhone() {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: RegisterServicePhonePage,
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());;
 
     const data: any = await modal.onDidDismiss();
 
@@ -126,12 +211,32 @@ export class GlobalSettingsPage implements OnInit {
     }
   }
 
+  async addSecretariat() {
+
+    this.loadingService.showLoading();
+    const modal = await this.modalController.create({
+      component: RegisterSecretariatPage,
+    });
+
+    await modal.present().then(() => this.loadingService.dismissLoading());;
+
+    const data: any = await modal.onDidDismiss();
+
+
+    if (data.data.response == 'success') {
+      this.doRefresh();
+      this.presentToast('Secretaríá añadida exitosamente');
+    }
+  }
+
   async addHierarchy() {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: RegisterHierarchyPage,
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());;
 
     const data: any = await modal.onDidDismiss();
 
@@ -143,6 +248,8 @@ export class GlobalSettingsPage implements OnInit {
   }
 
   async updateServicePhone(id, name, number) {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: UpdateServicePhonePage,
       componentProps: {
@@ -152,7 +259,7 @@ export class GlobalSettingsPage implements OnInit {
       }
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());;
 
     const data: any = await modal.onDidDismiss();
 
@@ -163,7 +270,31 @@ export class GlobalSettingsPage implements OnInit {
     }
   }
 
+  async updateSecretariat(id, name) {
+
+    this.loadingService.showLoading();
+    const modal = await this.modalController.create({
+      component: UpdateSecretariatPage,
+      componentProps: {
+        id: id,
+        name: name,
+      }
+    });
+
+    await modal.present().then(() => this.loadingService.dismissLoading());;
+
+    const data: any = await modal.onDidDismiss();
+
+
+    if (data.data.response == 'success') {
+      this.doRefresh();
+      this.presentToast('Secretaría actualizada exitosamente');
+    }
+  }
+
   async updateHierarchy(id, name, level) {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: UpdateHierarchyPage,
       componentProps: {
@@ -173,7 +304,7 @@ export class GlobalSettingsPage implements OnInit {
       }
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());;
 
     const data: any = await modal.onDidDismiss();
 
@@ -185,6 +316,8 @@ export class GlobalSettingsPage implements OnInit {
   }
 
   async updateDepartment(id, name, color, icon, info) {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: UpdateDepartmentPage,
       componentProps: {
@@ -196,7 +329,7 @@ export class GlobalSettingsPage implements OnInit {
       }
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());;
 
     const data: any = await modal.onDidDismiss();
 
@@ -207,21 +340,28 @@ export class GlobalSettingsPage implements OnInit {
     }
   }
 
-  async updateUser(id, name, lastname, phone, password, role, department) {
+  async updateUser(user) {
+
+    this.loadingService.showLoading();
     const modal = await this.modalController.create({
       component: UpdateUserPage,
       componentProps: {
-        id: id,
-        name: name,
-        lastname: lastname,
-        phone: phone,
-        password: password,
-        role: role,
-        department: department,
+        id: user._id,
+        name: user.name,
+        lastname: user.lastname,
+        phone: user.phone,
+        password: user.password,
+        secretariat: user.secretariat,
+        hierarchy: user.hierarchy,
+        department: user.department,
+        transfer: user.permissions.transfer,
+        waitingStatus: user.permissions.waitingStatus,
+        workingStatus: user.permissions.workingStatus,
+        finishStatus: user.permissions.finishStatus
       }
     });
 
-    await modal.present();
+    await modal.present().then(() => this.loadingService.dismissLoading());
 
     const data: any = await modal.onDidDismiss();
 
@@ -260,20 +400,128 @@ export class GlobalSettingsPage implements OnInit {
     });
   }
 
+  logicDownUser(id, available) {
+    if (available) {
+      this.userService.enableUser(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    } else {
+      this.userService.disableUser(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    }
+  }
+
+  logicDownSecretariat(id, available) {
+    this.configService.switchSecretariat(id, available).subscribe(response => {
+      window.location.reload();
+      //this.doRefresh();
+    });
+  }
+
+  logicDownDepartment(id, available) {
+    if (available) {
+      this.configService.enableDepartment(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    } else {
+      this.configService.disableDepartment(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    }
+  }
+
+  logicDownHierarchy(id, available) {
+    if (available) {
+      this.configService.enableHierarchy(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    } else {
+      this.configService.disableHierarchy(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    }
+  }
+
+  logicDownServicePhone(id, available) {
+    if (available) {
+      this.configService.enableServicePhone(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    } else {
+      this.configService.disableServicePhone(id).subscribe(response => {
+        console.log(response)
+        this.doRefresh();
+      });;
+    }
+  }
+
   doRefresh() {
     this.departments = [];
     this.users = [];
     this.servicePhones = [];
     this.hierarchies = [];
+    this.secretariats = [];
+    this.superUsers = [];
+    this.otherUsers = [];
+
     setTimeout(() => {
+      this.configService.getSecretariats().subscribe((data: any) => {
+        if (this.CurrentUser.hierarchy.level > 0) {
+          for (let secretariat of data) {
+            for (let userSecretariat of this.CurrentUser.departments) {
+              if (userSecretariat == secretariat._id) {
+                this.secretariats.push(secretariat);
+              }
+            }
+          }
+        } else {
+          this.secretariats = data;
+        }
+      });
       this.configService.getDepartments().subscribe((data: any) => {
-        this.departments = data;
+        if (this.CurrentUser.hierarchy.level > 0) {
+          for (let department of data) {
+            for (let userDepartment of this.CurrentUser.departments) {
+              if (userDepartment == department._id) {
+                this.departments.push(department);
+              }
+            }
+          }
+        } else {
+          this.departments = data;
+        }
       });
       this.userService.getUsers().subscribe((data: any) => {
         for (let user of data) {
           user.hierarchy = JSON.parse(user.hierarchy);
-          this.users.push(user);
+          if (user.hierarchy.level == 1) {
+            this.superUsers.push(user);
+          } else if(user.hierarchy.level > 1 && !user.secretariat && !user.department) {
+            this.otherUsers.push(user);
+          }
+          else{
+            this.users.push(user);
+          }
         }
+        this.users.sort((n1, n2) => {
+          if (n1.hierarchy.level > n2.hierarchy.level) {
+            return 1;
+          }
+
+          if (n1.hierarchy.level < n2.hierarchy.level) {
+            return -1;
+          }
+
+          return 0;
+        });
       });
       this.configService.getServicePhones().subscribe((data: any) => {
         this.servicePhones = data;

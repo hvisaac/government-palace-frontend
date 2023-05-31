@@ -17,17 +17,19 @@ export class ReportService {
     return this.http.get(`${environment.api}/my-reports/get-by-id/${_id}`);
   }
 
-  getReportByContent(content: string) {
+  getReportByContent(content: string, department) {
     const request = {
-      content: content
+      content: content,
+      department: department
     }
     return this.http.post(`${environment.api}/my-reports/get-by-content`, request);
   }
 
-  getReportsByDate(beginDate: Date, finalDate: Date) {
+  getReportsByDate(beginDate: Date, finalDate: Date, department) {
     const request = {
       beginDate: beginDate,
-      finalDate: finalDate
+      finalDate: finalDate,
+      department: department
     }
 
     return this.http.post(`${environment.api}/my-reports/get-by-date`, request);
@@ -53,13 +55,36 @@ export class ReportService {
     return this.http.post(`${environment.api}/my-reports/change-status`, request);
   }
 
-  finishReport(_id: string, photo: string, description: string) {
+  finishReport(_id: string, photo: string, description: string, phones: string[]) {
     const request = {
       _id: _id,
       photo: photo,
-      description: description
+      description: description,
+      phones: phones
     }
 
     return this.http.post(`${environment.api}/my-reports/finish-report`, request);
+  }
+
+  transferReport(_id: string, departmentID: string) {
+    let request = {
+      department: departmentID
+    }
+
+    return this.http.put(`${environment.api}/my-reports/${_id}/report`, request);
+
+  }
+
+  addNote(_id, body) {
+    const request = {
+      "$push": {
+        notes: {
+          body: body
+        }
+      }
+    }
+
+    return this.http.put(`${environment.api}/my-reports/${_id}/report`, request);
+
   }
 }

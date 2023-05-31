@@ -1,0 +1,27 @@
+  <ion-header [translucent]="false">
+    <ion-toolbar style="text-align: center; font-size: 20px; width: bold;">
+      <ion-back-button slot="start" (click)="dismiss()"></ion-back-button>
+      <ion-chip style="color: #f6f5f5; background: #7c1734; height: 80px;" slot="end">
+        <ion-icon name="ticket"></ion-icon>
+        <ion-label>#{{tittle}}</ion-label>
+      </ion-chip>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <div *ngFor="let note of notes; let i = index">
+      <ion-card mode="ios">
+        <ion-card-header>
+          <ion-card-title>Nota #{{i + 1}}</ion-card-title>
+          <ion-card-subtitle>Creada el {{note.createdAt | date: 'short'}}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+         {{note.body}}
+        </ion-card-content>
+
+        <ion-button fill="clear">Enviar a contribuyentes</ion-button>
+        <ion-button fill="clear">Eliminar</ion-button>
+      </ion-card>
+    </div>
+  </ion-content>

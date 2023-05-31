@@ -27,14 +27,12 @@ export class AllReportsPage implements OnInit {
   ngOnInit() {
     this.MenuController.enable(false);
     this.CurrentUser = JSON.parse(sessionStorage.getItem('user'));
-    console.log(this.CurrentUser);
     if (this.CurrentUser == null) {
       this.NavController.navigateRoot('/login');
     } else {
       if (this.CurrentUser[0].type == 1) {
         this.MenuController.enable(true);
         this.ReportService.getAllReports().subscribe((Reports: any) => {
-          console.log(Reports);
           for (let report of Reports) {
             report.department = JSON.parse(report.department);
             this.Reports.push(report);
@@ -83,19 +81,16 @@ export class AllReportsPage implements OnInit {
 
   changeStatus(_id: string, status: number) {
     this.ReportService.changeStatus(_id, status).subscribe(Response => {
-      console.log(Response);
       this.doRefresh();
     });
   }
 
   doRefresh() {
     this.Reports = [];
-    console.log('entra')
     setTimeout(() => {
       if (this.CurrentUser[0].type == 1) {
         this.MenuController.enable(true);
         this.ReportService.getAllReports().subscribe((Reports: any) => {
-          console.log(Reports);
           for (const report of Reports) {
             report.department = JSON.parse(report.department);
             this.Reports.push(report);
@@ -103,11 +98,9 @@ export class AllReportsPage implements OnInit {
         });
       } else {
         this.ReportService.getMyReports(this.CurrentUser.department).subscribe((reports: any[]) => {
-          console.log('entra')
           for (const report of reports) {
             report.department = JSON.parse(report.department);
             this.Reports.push(report);
-            console.log('entra')
           }
         });
       }

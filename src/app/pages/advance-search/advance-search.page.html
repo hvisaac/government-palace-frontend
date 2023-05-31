@@ -11,43 +11,30 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-select [(ngModel)]="option" interface="popover" placeholder="Selecciona una opción">
-        <ion-select-option value="1">Id</ion-select-option>
-        <ion-select-option value="2">Palabras en la descripción</ion-select-option>
-        <ion-select-option value="3">Rango de fechas</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
+  <ion-segment [(ngModel)]="option" value="1">
+    <ion-segment-button value="1">
+      <ion-icon name="language"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="2">
+      <ion-icon name="calendar"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
 
   <div [ngSwitch]="option">
-    <ion-searchbar *ngSwitchCase="1"  placeholder="Id"></ion-searchbar>
-    <ion-searchbar *ngSwitchCase="2" [(ngModel)]="content" placeholder="Palabras en la descripción"></ion-searchbar>
+    <ion-searchbar *ngSwitchCase="1" [(ngModel)]="content" show-clear-button="focus" animated="true" mode="ios"
+      placeholder="Palabras en la descripción"></ion-searchbar>
 
-    <div *ngSwitchCase="3">
+    <div *ngSwitchCase="2">
 
-      <ion-title> Fecha inicial </ion-title>
+      <ion-datetime mode="md" [(ngModel)]="beginDate" locale="es" style="margin: 50px;" datetime="startDatetime"
+        presentation="date">
+        <span slot="title">Fecha inicial</span>
+      </ion-datetime>
+      <ion-datetime mode="md" [(ngModel)]="finalDate" locale="es" style="margin: 50px;" datetime="endDatetime"
+        presentation="date">
+        <span slot="title">Fecha final</span>
+      </ion-datetime>
 
-      <ion-datetime-button style="margin: 50px;" datetime="startDatetime"></ion-datetime-button>
-
-      <ion-modal [keepContentsMounted]="true">
-        <ng-template> 
-          <ion-datetime [(ngModel)]="beginDate" locale="es" [showDefaultButtons]="true" doneText="Aceptar" cancelText="Cancelar" id="startDatetime">
-          </ion-datetime>
-        </ng-template>
-      </ion-modal>
-
-      <ion-title> Fecha final </ion-title>
-
-      <ion-datetime-button style="margin: 50px;" datetime="endDatetime"></ion-datetime-button>
-
-      <ion-modal [keepContentsMounted]="true">
-        <ng-template>
-          <ion-datetime [(ngModel)]="finalDate" locale="es" [showDefaultButtons]="true" doneText="Aceptar" cancelText="Cancelar" id="endDatetime">
-          </ion-datetime>
-        </ng-template>
-      </ion-modal>
     </div>
   </div>
 

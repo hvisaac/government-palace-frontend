@@ -87,6 +87,18 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
   },
+  {
+    path: 'register-secretariat',
+    loadChildren: () => import('./pages/register-secretariat/register-secretariat.module').then( m => m.RegisterSecretariatPageModule)
+  },
+  {
+    path: 'update-secretariat',
+    loadChildren: () => import('./pages/update-secretariat/update-secretariat.module').then( m => m.UpdateSecretariatPageModule)
+  },
+  {
+    path: 'notes',
+    loadChildren: () => import('./pages/notes/notes.module').then( m => m.NotesPageModule)
+  },
 ];
 
 @NgModule({
